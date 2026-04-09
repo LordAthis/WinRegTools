@@ -3,7 +3,18 @@ Fontos Regisztry értékek Win tuninghoz, okos beállításokhoz, optimalizálá
 
 
 
-# 1. Összefoglaló: Van még relevanciája?
+# Összefoglaló:
+Hamarosan!
+Lista:
+- 48 Bit LBA (On - Off)
+- LongPaths (On - Off)
+- Lapozófájl törlése kilépéskor (Csökkenti a lemezterület töredezettségét, gyorsabb az elindulás, hátrány: talán picit lassabb a leállítás)
+- Temp (TMP, temp, TEMP) mappák egységes kezelése (Kevesebb szemét, kevésbé töredezett meghajtó, gyorsabb telepítések, rendszer elérés)
+- 
+
+
+
+# 1. 48 Bit LBA: Van még relevanciája?
 A cikkeimben leírt 48-bit LBA (EnableBigLba) probléma ma már csak retró környezetben (XP SP1 előtt) releváns a 137 GB feletti merevlemezek kezeléséhez. 
 
 A modern rendszereken (Win10/11) tapasztalt "túl hosszú nevek" hiba már nem címzési korlát (LBA), hanem a 260 karakteres elérési út korlátja (MAX_PATH). Bár a jelenség hasonló (adatvesztés vagy hiba), a megoldás már egy másik regisztrációs kulcs: LongPathsEnabled
