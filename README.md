@@ -9,7 +9,7 @@ Lista:
 - 48 Bit LBA (On - Off)
 - LongPaths (On - Off)
 - Lapozófájl törlése kilépéskor (Csökkenti a lemezterület töredezettségét, gyorsabb az elindulás, hátrány: talán picit lassabb a leállítás)
-- Temp (TMP, temp, TEMP) mappák egységes kezelése (Kevesebb szemét, kevésbé töredezett meghajtó, gyorsabb telepítések, rendszer elérés)
+- Temp - HAMAROSAN! (TMP, temp, TEMP) mappák egységes kezelése (Kevesebb szemét, kevésbé töredezett meghajtó, gyorsabb telepítések, rendszer elérés)
 - 
 
 
