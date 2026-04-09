@@ -19,12 +19,14 @@ echo ========================================
 echo 1. 48-Bit LBA BE (EnableBigLba)
 echo 2. 48-Bit LBA KI
 echo 3. Lapozofajl torlese leallaskor BE
-echo 4. Kilepes
+echo 4. RPC Fix (Ipsm hiba javitas)
+echo 5. Kilepes
 echo ----------------------------------------
 set /p opt="Valassz opciot: "
 
 if "%opt%"=="1" regedit /s reg\48BitLBA_On.reg & echo Keszi! & pause & goto RETRO_MENU
 if "%opt%"=="2" regedit /s reg\48BitLBA_Off.reg & echo Kesz! & pause & goto RETRO_MENU
 if "%opt%"=="3" regedit /s reg\SwapDeleteToShutdown.reg & echo Kesz! & pause & goto RETRO_MENU
-if "%opt%"=="4" exit
+if "%opt%"=="4" regedit /s reg\RPCHelper_Fix.reg & echo Kesz! & pause & goto RETRO_MENU
+if "%opt%"=="5" exit
 goto RETRO_MENU
