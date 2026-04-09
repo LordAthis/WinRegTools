@@ -1,5 +1,5 @@
 # WinRegTools
-Fontos Regisztry értékek Win tuninghoz, okos beállításokhoz, optimalizáláshoz
+Fontos Regisztry értékek és PS Scriptek Win tuninghoz, okos beállításokhoz, optimalizáláshoz
 
 
 
