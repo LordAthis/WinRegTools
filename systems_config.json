@@ -22,6 +22,17 @@
       }
     },
     {
+  "id": "RPCFix",
+  "name": "RPC Server Fix",
+  "description": "Javítja az Intel Ipsm által okozott RPC hibát.",
+  "compatibility": {
+    "WinXP": { "method": "reg", "path": "reg/RPCHelper_Fix.reg" },
+    "Win7": { "method": "ps1", "path": "Script/RPCHelper_Fix.ps1" },
+    "Win10": { "method": "ps1", "path": "Script/RPCHelper_Fix.ps1" },
+    "Win11": { "method": "ps1", "path": "Script/RPCHelper_Fix.ps1" }
+      }
+    },
+    {
       "id": "SwapClear",
       "name": "Clear Page File at Shutdown",
       "description": "Lapozófájl törlése leálláskor (töredezettségmentesítés).",
