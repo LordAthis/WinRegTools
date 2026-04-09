@@ -50,6 +50,8 @@ Ez a szkript lekérdezi a jelenlegi állapotot, és rákérdez a módosításra.
 | **Win XP / 2000** | 48-bit LBA | `.reg` | 137 GB felett kötelező, SP1/SP3 előtt kézzel kell, utána elvileg megy, de ellenőrizni érdemes. (XP SP1 / W2k SP3 előtt). |
 | **Windows 7** | 48-bit LBA | **Alapból Be** | Nincs szükség kézi beavatkozásra a lemezmérethez. |
 | **Win7** | Swap Törlés | `.ps1` | Itt már PowerShell alapú kezelés javasolt,de a Win7 alapból nem engedi a szkripteket (Restricted), így a master.bat-ban a -ExecutionPolicy Bypass kapcsoló lesz segítségünkre. |
+| XP / Win7 | RPC Fix | .reg / .ps1 | Intel Ipsm által okozott "RPC kiszolgáló nem indul" hiba javítása. |
+| Win10 / 11 | RPC Fix | .ps1 | Megelőzés: Ellenőrzi és javítja az RPC szolgáltatás indítási típusát. |
 | **Win10 / 11** | Long Paths | `.ps1` | 260 karakter feletti utakhoz (MAX_PATH feloldása). Segít a mély mappaszerkezetnél, de az Intéző (Explorer) korlátokba ütközhet. |
 | **Win10 / 11** | Swap Törlés | `.ps1` | SSD-nél kevésbé kritikus, de biztonság miatt kérhető. |
 
