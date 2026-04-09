@@ -46,5 +46,19 @@ Ez a szkript lekérdezi a jelenlegi állapotot, és rákérdez a módosításra.
 > [!IMPORTANT]
 > **Fontos:** Retró gépeken (XP és korábbiak) a 48-bit LBA bekapcsolása előtt győződj meg róla, hogy az alaplap BIOS-a is támogatja azt, különben adatvesztés történhet!
 
+### 4. Melyiket mikor érdemes kapcsolni?
+
+
+| Rendszer | Téma | Megoldás | Javaslat / Indoklás |
+| :--- | :--- | :--- | :--- |
+| **95 / 98** | 48-bit LBA | Driver kell | Regisztrációs kulcs önmagában nem elég, patch/driver szükséges. |
+| **95 - XP** | Swap Törlés | `.reg` | `ClearPageFileAtShutdown=1`. Csökkenti a töredezettséget. |
+| **NT 4.0** | 48-bit LBA | `.reg` | Csak SP6 és speciális ATAPI driver után stabil. |
+| **XP / 2000** | 48-bit LBA | `.reg` | 137 GB felett kötelező (XP SP1 / W2k SP3 előtt). |
+| **Win7** | Swap Törlés | `.ps1` | Itt már PowerShell alapú kezelés javasolt. |
+| **Win10 / 11** | Long Paths | `.ps1` | 260 karakter feletti utakhoz (MAX_PATH feloldása). |
+| **Win10 / 11** | Swap Törlés | `.ps1` | SSD-nél kevésbé kritikus, de biztonság miatt kérhető. |
+
+> **Fontos:** A retró gépeken (XP és korábbiak) a 48-bit LBA bekapcsolása előtt győződj meg róla, hogy az alaplap **BIOS-a is támogatja** azt, különben adatvesztés történhet!
 
 
