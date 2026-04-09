@@ -19,10 +19,18 @@ Ez a szkript lekérdezi a jelenlegi állapotot, és rákérdez a módosításra.
 
 
 4. Melyiket mikor érdemes kapcsolni?
-Rendszer 	Beállítás típusa	Javaslat	Indoklás
-95 / 98	N/A	Driver kell	Regisztrációs kulcs önmagában nem elég, harmadik féltől származó patch/driver szükséges.
-NT 4.0	48-bit LBA	Be (SP6 után)	Csak SP6 és speciális ATAPI driver frissítés után működik stabilan.
-XP / Win2000	48-bit LBA	Be (Kötelező)	Ha 137 GB-nál nagyobb a lemez, SP1/SP3 előtt kézzel kell, utána elvileg alapból megy, de ellenőrizni érdemes.
-Win7	48-bit LBA	Alapból Be	Itt már nincs szükség kézi beavatkozásra a lemezmérethez.
-Win10 / 11	Long Paths	Be (Opcionális)	Ha sok a mély mappaszerkezeted, kapcsold be, de tudd: az Intéző (Explorer) még így is korlátokba ütközhet.
-Fontos: A retró gépeken (XP és korábbiak) a 48-bit LBA bekapcsolása előtt győződj meg róla, hogy az alaplap BIOS-a is támogatja azt, különben adatvesztés történhet.
+
+
+| Rendszer | Beállítás típusa | Javaslat | Indoklás |
+| :--- | :--- | :--- | :--- |
+| **Windows 95 / 98** | N/A | **Driver kell** | Regisztrációs kulcs önmagában nem elég; harmadik féltő patch/driver szükséges. |
+| **Windows NT 4.0** | 48-bit LBA | **Be (SP6 után)** | Csak SP6 és speciális ATAPI driver frissítés után működik stabilan. |
+| **Windows 2000 / XP** | 48-bit LBA | **Be (Kötelező)** | >137 GB-nál SP1/SP3 előtt kézzel kell, utána elvileg megy, de ellenőrizni érdemes. |
+| **Windows 7** | 48-bit LBA | **Alapból Be** | Nincs szükség kézi beavatkozásra a lemezmérethez. |
+| **Windows 10 / 11** | Long Paths | **Be (Opcionális)** | Segít a mély mappaszerkezetnél, de az Intéző (Explorer) korlátokba ütközhet. |
+
+> [!IMPORTANT]
+> **Fontos:** Retró gépeken (XP és korábbiak) a 48-bit LBA bekapcsolása előtt győződj meg róla, hogy az alaplap BIOS-a is támogatja azt, különben adatvesztés történhet!
+
+
+
