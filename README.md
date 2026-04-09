@@ -6,19 +6,17 @@ Fontos Regisztry értékek Win tuninghoz, okos beállításokhoz, optimalizálá
 # 1. Összefoglaló: Van még relevanciája?
 A cikkeimben leírt 48-bit LBA (EnableBigLba) probléma ma már csak retró környezetben (XP SP1 előtt) releváns a 137 GB feletti merevlemezek kezeléséhez. 
 
-# A modern rendszereken (Win10/11) tapasztalt "túl hosszú nevek" hiba már nem címzési korlát (LBA), hanem a 260 karakteres elérési út korlátja (MAX_PATH). Bár a jelenség hasonló (adatvesztés vagy hiba), a megoldás már egy másik regisztrációs kulcs: LongPathsEnabled
+A modern rendszereken (Win10/11) tapasztalt "túl hosszú nevek" hiba már nem címzési korlát (LBA), hanem a 260 karakteres elérési út korlátja (MAX_PATH). Bár a jelenség hasonló (adatvesztés vagy hiba), a megoldás már egy másik regisztrációs kulcs: LongPathsEnabled
 
-2. Retró gépekhez: 48-bit LBA .reg fájlok
+# 2. Retró gépekhez: 48-bit LBA .reg fájlok
 Ezeket a fájlokat Windows 2000 (SP3 előtt) és Windows XP (SP1 előtt) rendszereken használd.
 - 48BitLBA_On.reg
 - 48BitLBA_Off.reg
 
-
-3. Mai gépekhez: Modern PowerShell szkript (Hosszú nevek kezelése)
+# 3. Mai gépekhez: Modern PowerShell szkript (Hosszú nevek kezelése)
 Ez a szkript lekérdezi a jelenlegi állapotot, és rákérdez a módosításra. Alapból rendszergazdai jogot kér.
 
-
-4. Melyiket mikor érdemes kapcsolni?
+# 4. Melyiket mikor érdemes kapcsolni?
 
 
 | Rendszer | Beállítás típusa | Javaslat | Indoklás |
