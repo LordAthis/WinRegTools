@@ -16,8 +16,7 @@ Lista:
 # Kompatibilitás:
 Egy központi konfigurációs fájl a repó gyökerében szabályozza a rendszerekhez való kompatibilitást (Főleg automatikus használat/telepítés esetén lesz jelentősége!)
 Fájlnév: systems_config.json
-Ez a fájl tartalmazza a logikát: melyik OS-hez melyik megoldás (script vagy reg) tartozik, és mi a javaslat.
-
+Ez a fájl tartalmazza a logikát: melyik OS-hez melyik megoldás (script vagy reg) tartozik, és mi a javaslat, így a systems_config.json-ra épülő, dinamikus menürendszer előnye, hogy a script automatikusan a Windows verziójához igazítja az elérhető műveleteket. Ez a megoldás kiküszöböli a felesleges opciókat és egyszerűsíti a jövőbeni bővítéseket a menüpontok fix kódolása nélkül. Az RTS repóhoz is könnyebben használható!
 
 # Vezérlés:
 Ezzel a két fájllal lehet indítani, hogy sorban futtatni lehessen a beállításokat, finom-hangolást!
@@ -58,4 +57,5 @@ Ez a szkript lekérdezi a jelenlegi állapotot, és rákérdez a módosításra.
 > **Fontos:** Retró gépeken (XP és korábbiak) a 48-bit LBA bekapcsolása előtt győződj meg róla, hogy az alaplap BIOS-a is támogatja azt, különben adatvesztés történhet!
 
 
-
+---
+*Készült az RTS ([Reparing's - Tuning's - Setting's](https://github.com/LordAthis/RTS)) projekt keretében. Használható önállóan vagy a keretrendszer moduljaként is!*
