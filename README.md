@@ -19,6 +19,14 @@ Fájlnév: systems_config.json
 Ez a fájl tartalmazza a logikát: melyik OS-hez melyik megoldás (script vagy reg) tartozik, és mi a javaslat.
 
 
+# Vezérlés:
+Ezzel a két fájllal lehet indítani, hogy sorban futtatni lehessen a beállításokat, finom-hangolást!
+- master.bat (A repó gyökerébe)
+Ez a belépési pont. Ha Win7 vagy újabb, átdobja a labdát a PowerShellnek, ha régebbi, marad a karakteres menü a .reg fájlokhoz.
+- Script\Master_Script.ps1
+Ez a modern rendszerek agya. Beolvassa a JSON-t (ha van), de önállóan is kezeli a menüt az általad kért UTF8/Admin követelményekkel.
+
+
 # 1. 48 Bit LBA: Van még relevanciája?
 A cikkeimben leírt 48-bit LBA (EnableBigLba) probléma ma már csak retró környezetben (XP SP1 előtt) releváns a 137 GB feletti merevlemezek kezeléséhez. 
 
@@ -42,7 +50,7 @@ Ez a szkript lekérdezi a jelenlegi állapotot, és rákérdez a módosításra.
 | **Win NT 4.0** | 48-bit LBA | `.reg` | Csak SP6 és speciális ATAPI driver frissítés után működik stabilan. |
 | **Win XP / 2000** | 48-bit LBA | `.reg` | 137 GB felett kötelező, SP1/SP3 előtt kézzel kell, utána elvileg megy, de ellenőrizni érdemes. (XP SP1 / W2k SP3 előtt). |
 | **Windows 7** | 48-bit LBA | **Alapból Be** | Nincs szükség kézi beavatkozásra a lemezmérethez. |
-| **Win7** | Swap Törlés | `.ps1` | Itt már PowerShell alapú kezelés javasolt. |
+| **Win7** | Swap Törlés | `.ps1` | Itt már PowerShell alapú kezelés javasolt,de a Win7 alapból nem engedi a szkripteket (Restricted), így a master.bat-ban a -ExecutionPolicy Bypass kapcsoló lesz segítségünkre. |
 | **Win10 / 11** | Long Paths | `.ps1` | 260 karakter feletti utakhoz (MAX_PATH feloldása). Segít a mély mappaszerkezetnél, de az Intéző (Explorer) korlátokba ütközhet. |
 | **Win10 / 11** | Swap Törlés | `.ps1` | SSD-nél kevésbé kritikus, de biztonság miatt kérhető. |
 
