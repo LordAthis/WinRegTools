@@ -1,0 +1,40 @@
+{
+  "tools": [
+    {
+      "id": "48bitLBA",
+      "name": "48-bit LBA Enabler",
+      "description": "137GB feletti lemezek kezelése régi rendszereken.",
+      "compatibility": {
+        "Win95": { "method": "driver_required", "action": "none" },
+        "Win98": { "method": "driver_required", "action": "none" },
+        "WinNT4": { "method": "reg", "path": "reg/48BitLBA_On.reg", "note": "SP6 + ATAPI update kell!" },
+        "Win2000": { "method": "reg", "path": "reg/48BitLBA_On.reg", "note": "SP3 alatt kötelező." },
+        "WinXP": { "method": "reg", "path": "reg/48BitLBA_On.reg", "note": "SP1 alatt kötelező." }
+      }
+    },
+    {
+      "id": "LongPaths",
+      "name": "Long Paths Enabler",
+      "description": "260 karakter feletti elérési utak engedélyezése.",
+      "compatibility": {
+        "Win10": { "method": "ps1", "path": "Script/LongPaths_On_Off.ps1" },
+        "Win11": { "method": "ps1", "path": "Script/LongPaths_On_Off.ps1" }
+      }
+    },
+    {
+      "id": "SwapClear",
+      "name": "Clear Page File at Shutdown",
+      "description": "Lapozófájl törlése leálláskor (töredezettségmentesítés).",
+      "compatibility": {
+        "Win95": { "method": "reg", "path": "reg/SwapDeleteToShutdown.reg" },
+        "Win98": { "method": "reg", "path": "reg/SwapDeleteToShutdown.reg" },
+        "WinNT4": { "method": "reg", "path": "reg/SwapDeleteToShutdown.reg" },
+        "Win2000": { "method": "reg", "path": "reg/SwapDeleteToShutdown.reg" },
+        "WinXP": { "method": "reg", "path": "reg/SwapDeleteToShutdown.reg" },
+        "Win7": { "method": "ps1", "path": "Script/SwapDeleteToShutdown.ps1" },
+        "Win10": { "method": "ps1", "path": "Script/SwapDeleteToShutdown.ps1" },
+        "Win11": { "method": "ps1", "path": "Script/SwapDeleteToShutdown.ps1" }
+      }
+    }
+  ]
+}
