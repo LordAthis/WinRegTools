@@ -8,8 +8,10 @@ Hamarosan!
 Lista:
 - 48 Bit LBA (On - Off)
 - LongPaths (On - Off)
-- Lapozófájl törlése kilépéskor (Csökkenti a lemezterület töredezettségét, gyorsabb az elindulás, hátrány: talán picit lassabb a leállítás)
-- Temp - HAMAROSAN! (TMP, temp, TEMP) mappák egységes kezelése (Kevesebb szemét, kevésbé töredezett meghajtó, gyorsabb telepítések, rendszer elérés)
+- Lapozófájl törlése kilépéskor
+- Temp - HAMAROSAN!
+- RPC Kiszolgáló Hiba
+- Készülőben! QoS Packet Scheduler
 - 
 
 
@@ -36,10 +38,28 @@ Ezeket a fájlokat Windows 2000 (SP3 előtt) és Windows XP (SP1 előtt) rendsze
 - 48BitLBA_On.reg
 - 48BitLBA_Off.reg
 
-# 3. Mai gépekhez: Modern PowerShell szkript (Hosszú nevek kezelése)
+
+# 3. Lapozófájl törlése kilépéskor
+Csökkenti a lemezterület töredezettségét, gyorsabb az elindulás, hátrány: talán picit lassabb a leállítás
+
+
+# 4. Temp - HAMAROSAN!
+A "TMP", "temp", "TEMP" mappák egységes kezelése a Windows-on!
+(Kevesebb szemét, kevésbé töredezett váló meghajtó, gyorsabb telepítések, futtarások, gyorsabb rendszer elérés)
+
+
+# 4. RPC Kiszolgáló Hiba
+Ipsm által okozott "RPC kiszolgáló nem indul" hiba javítása
+
+# 5. QoS Packet Scheduler
+A sávszélesség-korlátozás feloldása (QoS Packet Scheduler és társai) klasszikus teljesítményfokozó téma!
+(A hálózati sávszélesség kihasználása adatátvitelre)
+
+
+# Mai gépekhez: Modern PowerShell szkript (Hosszú nevek kezelése)
 Ez a szkript lekérdezi a jelenlegi állapotot, és rákérdez a módosításra. Alapból rendszergazdai jogot kér.
 
-# 4. Melyiket mikor érdemes kapcsolni?
+# Melyiket mikor érdemes kapcsolni?
 
 
 | Rendszer | Téma | Megoldás | Javaslat / Indoklás |
