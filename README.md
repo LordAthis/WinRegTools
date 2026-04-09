@@ -3,9 +3,7 @@ Fontos Regisztry értékek Win tuninghoz, okos beállításokhoz, optimalizálá
 
 
 
-# Összefoglaló:
-Hamarosan!
-Lista:
+# Összefoglaló lista:
 - 48 Bit LBA (On - Off)
 - LongPaths (On - Off)
 - Lapozófájl törlése kilépéskor
