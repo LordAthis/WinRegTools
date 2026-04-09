@@ -13,6 +13,11 @@ Lista:
 - 
 
 
+# Kompatibilitás:
+Egy központi konfigurációs fájl a repó gyökerében szabályozza a rendszerekhez való kompatibilitást (Főleg automatikus használat/telepítés esetén lesz jelentősége!)
+Fájlnév: systems_config.json
+Ez a fájl tartalmazza a logikát: melyik OS-hez melyik megoldás (script vagy reg) tartozik, és mi a javaslat.
+
 
 # 1. 48 Bit LBA: Van még relevanciája?
 A cikkeimben leírt 48-bit LBA (EnableBigLba) probléma ma már csak retró környezetben (XP SP1 előtt) releváns a 137 GB feletti merevlemezek kezeléséhez. 
