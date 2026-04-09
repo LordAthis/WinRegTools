@@ -10,6 +10,7 @@ function Show-Menu {
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host "1. Hosszú nevek (LongPaths) kezelése"
     Write-Host "2. Lapozófájl ürítés (SwapDelete) kezelése"
+    Write-Host "3. RPC Hiba javítása"
     Write-Host "3. Kilépés"
     Write-Host "----------------------------------------"
 }
@@ -20,6 +21,7 @@ do {
     switch ($choice) {
         "1" { & "$PSScriptRoot\LongPaths_On_Off.ps1" }
         "2" { & "$PSScriptRoot\SwapDeleteToShutdown.ps1" }
-        "3" { exit }
+        "3" { & "$PSScriptRoot\RPCHelper_Fix.ps1" }
+        "4" { exit }
     }
 } while ($true)
