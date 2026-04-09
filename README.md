@@ -35,30 +35,19 @@ Ez a szkript lekérdezi a jelenlegi állapotot, és rákérdez a módosításra.
 # 4. Melyiket mikor érdemes kapcsolni?
 
 
-| Rendszer | Beállítás típusa | Javaslat | Indoklás |
+| Rendszer | Téma | Megoldás | Javaslat / Indoklás |
 | :--- | :--- | :--- | :--- |
-| **Windows 95 / 98** | N/A | **Driver kell** | Regisztrációs kulcs önmagában nem elég; harmadik féltő patch/driver szükséges. |
-| **Windows NT 4.0** | 48-bit LBA | **Be (SP6 után)** | Csak SP6 és speciális ATAPI driver frissítés után működik stabilan. |
-| **Windows 2000 / XP** | 48-bit LBA | **Be (Kötelező)** | >137 GB-nál SP1/SP3 előtt kézzel kell, utána elvileg megy, de ellenőrizni érdemes. |
+| **Win 95 / 98** | 48-bit LBA | Driver kell | Regisztrációs kulcs önmagában nem elég; harmadik féltől patch/driver szükséges. |
+| **Win 95 - XP** | Swap Törlés | `.reg` | `ClearPageFileAtShutdown=1`. Csökkenti a töredezettséget. |
+| **Win NT 4.0** | 48-bit LBA | `.reg` | Csak SP6 és speciális ATAPI driver frissítés után működik stabilan. |
+| **Win XP / 2000** | 48-bit LBA | `.reg` | 137 GB felett kötelező, SP1/SP3 előtt kézzel kell, utána elvileg megy, de ellenőrizni érdemes. (XP SP1 / W2k SP3 előtt). |
 | **Windows 7** | 48-bit LBA | **Alapból Be** | Nincs szükség kézi beavatkozásra a lemezmérethez. |
-| **Windows 10 / 11** | Long Paths | **Be (Opcionális)** | Segít a mély mappaszerkezetnél, de az Intéző (Explorer) korlátokba ütközhet. |
+| **Win7** | Swap Törlés | `.ps1` | Itt már PowerShell alapú kezelés javasolt. |
+| **Win10 / 11** | Long Paths | `.ps1` | 260 karakter feletti utakhoz (MAX_PATH feloldása). Segít a mély mappaszerkezetnél, de az Intéző (Explorer) korlátokba ütközhet. |
+| **Win10 / 11** | Swap Törlés | `.ps1` | SSD-nél kevésbé kritikus, de biztonság miatt kérhető. |
 
 > [!IMPORTANT]
 > **Fontos:** Retró gépeken (XP és korábbiak) a 48-bit LBA bekapcsolása előtt győződj meg róla, hogy az alaplap BIOS-a is támogatja azt, különben adatvesztés történhet!
 
-### 4. Melyiket mikor érdemes kapcsolni?
-
-
-| Rendszer | Téma | Megoldás | Javaslat / Indoklás |
-| :--- | :--- | :--- | :--- |
-| **95 / 98** | 48-bit LBA | Driver kell | Regisztrációs kulcs önmagában nem elég, patch/driver szükséges. |
-| **95 - XP** | Swap Törlés | `.reg` | `ClearPageFileAtShutdown=1`. Csökkenti a töredezettséget. |
-| **NT 4.0** | 48-bit LBA | `.reg` | Csak SP6 és speciális ATAPI driver után stabil. |
-| **XP / 2000** | 48-bit LBA | `.reg` | 137 GB felett kötelező (XP SP1 / W2k SP3 előtt). |
-| **Win7** | Swap Törlés | `.ps1` | Itt már PowerShell alapú kezelés javasolt. |
-| **Win10 / 11** | Long Paths | `.ps1` | 260 karakter feletti utakhoz (MAX_PATH feloldása). |
-| **Win10 / 11** | Swap Törlés | `.ps1` | SSD-nél kevésbé kritikus, de biztonság miatt kérhető. |
-
-> **Fontos:** A retró gépeken (XP és korábbiak) a 48-bit LBA bekapcsolása előtt győződj meg róla, hogy az alaplap **BIOS-a is támogatja** azt, különben adatvesztés történhet!
 
 
