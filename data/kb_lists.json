@@ -1,0 +1,318 @@
+{
+  "_comment": "RTS Framework - KB Enabled/Disabled List",
+  "_version": "1.0",
+  "_author": "LordAthis Szervizem/Boltom",
+  "_last_updated": "2025-04",
+  "_note": "required=kötelező biztonsági frissítés | harmful=eltávolítandó | recommended=ajánlott | optional=opcionális",
+
+  "Windows_95": {
+    "_build": "4.00",
+    "_support_ended": "2001-12-31",
+    "_ps_available": false,
+    "_script_type": "bat",
+    "required": [],
+    "harmful": [],
+    "recommended": [],
+    "notes": "Windows 95 esetén KB rendszer nem létezett. Patch-ek .exe formában érhetők el. Online frissítés már nem elérhető."
+  },
+
+  "Windows_98": {
+    "_build": "4.10",
+    "_support_ended": "2006-07-11",
+    "_ps_available": false,
+    "_script_type": "bat",
+    "required": [],
+    "harmful": [],
+    "recommended": [],
+    "notes": "Windows 98 esetén KB rendszer nem létezett. Windows Update szerver már nem elérhető. Offline patch-ek: 98SE2ME, unofficial SP."
+  },
+
+  "Windows_XP": {
+    "_build": "5.1",
+    "_support_ended": "2014-04-08",
+    "_ps_available": "optional_install",
+    "_ps_versions": {
+      "minimum": "1.0",
+      "recommended": "2.0",
+      "best": "2.0",
+      "note": "PS 3.0+ nem támogatott XP-n. PS 2.0 ajánlott, de NE telepítsd ha az erőforrás korlátozott (512MB RAM alatt)!"
+    },
+    "_script_type": "bat_primary",
+    "required": [
+      {
+        "kb": "KB835732",
+        "desc": "MS04-011 - LSASS biztonsági patch (Sasser féreg ellen)",
+        "critical": true
+      },
+      {
+        "kb": "KB890830",
+        "desc": "Malicious Software Removal Tool",
+        "critical": false
+      },
+      {
+        "kb": "KB2347290",
+        "desc": "SHA-2 Code Signing support (nélküle sok szoftver nem fut)",
+        "critical": true
+      }
+    ],
+    "harmful": [
+      {
+        "kb": "KB898461",
+        "desc": "Windows Genuine Advantage Notification - nag screen telepítő",
+        "reason": "Nem biztonsági frissítés, csak bosszantó figyelmeztetés"
+      }
+    ],
+    "recommended": [],
+    "notes": "XP SP3 ajánlott alapállapot. Windows Update szerver offline. WSUS Offline Update eszközzel lehet frissíteni."
+  },
+
+  "Windows_7": {
+    "_build": "6.1",
+    "_support_ended": "2020-01-14",
+    "_ps_available": true,
+    "_ps_versions": {
+      "installed": "2.0",
+      "minimum": "2.0",
+      "recommended": "4.0",
+      "best": "5.1",
+      "note": "PS 5.1 ajánlott (WMF 5.1 csomag), de csak ha van legalább 1GB szabad RAM. Lassabb gépen maradj PS 4.0-nál (WMF 4.0)."
+    },
+    "_script_type": "bat_launcher_for_ps1",
+    "required": [
+      {
+        "kb": "KB3020369",
+        "desc": "April 2015 Servicing Stack Update - KÖTELEZŐ a többi frissítés előtt!",
+        "critical": true,
+        "install_order": 1
+      },
+      {
+        "kb": "KB3125574",
+        "desc": "Convenience Rollup (SP2 jellegű csomag) - 2016-ig minden frissítés",
+        "critical": true,
+        "install_order": 2
+      },
+      {
+        "kb": "KB3138612",
+        "desc": "Windows Update Client frissítés - gyorsabb WU szkennelés",
+        "critical": true,
+        "install_order": 3
+      },
+      {
+        "kb": "KB3172605",
+        "desc": "July 2016 Update Rollup",
+        "critical": true,
+        "install_order": 4
+      },
+      {
+        "kb": "KB4490628",
+        "desc": "Servicing Stack Update 2019",
+        "critical": true,
+        "install_order": 5
+      },
+      {
+        "kb": "KB4474419",
+        "desc": "SHA-2 Code Signing Support - nélküle 2019 utáni frissítések nem jönnek",
+        "critical": true,
+        "install_order": 6
+      }
+    ],
+    "harmful": [
+      {
+        "kb": "KB3035583",
+        "desc": "Get Windows 10 - GWX telepítő",
+        "reason": "Erőforrást eszik, nag screenek, W10 upgrade erőltetése",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB2952664",
+        "desc": "Compatibility update for upgrading Windows 7 (telemetria előkészítő)",
+        "reason": "Telemetria gyűjtő, erőforrás-pazarló háttérfolyamat",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB3068708",
+        "desc": "Update for customer experience and diagnostic telemetry",
+        "reason": "Tiszta telemetria csomag",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB3022345",
+        "desc": "Update for customer experience and diagnostic telemetry (korábbi verzió)",
+        "reason": "Telemetria",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB3075249",
+        "desc": "Update adds telemetry points to consent.exe",
+        "reason": "Telemetria injektálás a consent.exe-be",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB3080149",
+        "desc": "Update for customer experience and diagnostic telemetry",
+        "reason": "Telemetria",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB3021917",
+        "desc": "Update to Windows 7 SP1 for performance improvements (W10 readiness)",
+        "reason": "W10 upgrade előkészítő, diagnosztika",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB971033",
+        "desc": "Windows Activation Technologies Update",
+        "reason": "WGA aktivációs ellenőrző, hálózati kommunikáció",
+        "action": "optional_remove"
+      }
+    ],
+    "recommended": [
+      {
+        "kb": "KB2670838",
+        "desc": "Platform Update (Direct2D, DirectWrite) - IE11 és modern szoftverekhez kell"
+      },
+      {
+        "kb": "KB2834140",
+        "desc": "Platform Update Supplement"
+      }
+    ],
+    "notes": "W7 SP1 alapállapot szükséges. A KB3020369 és KB3138612 NÉLKÜL a Windows Update órákon át tölt be (ismert hiba). Ezeket OFFLINE kell telepíteni."
+  },
+
+  "Windows_8": {
+    "_build": "6.2",
+    "_support_ended": "2016-01-12",
+    "_ps_available": true,
+    "_ps_versions": {
+      "installed": "3.0",
+      "minimum": "3.0",
+      "recommended": "5.1",
+      "best": "5.1",
+      "note": "WMF 5.1 telepíthető, ajánlott."
+    },
+    "_script_type": "bat_launcher_for_ps1",
+    "required": [],
+    "harmful": [
+      {
+        "kb": "KB3035583",
+        "desc": "Get Windows 10",
+        "reason": "GWX, upgrade erőltetés",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB2976978",
+        "desc": "Compatibility update for Windows 8.1 (telemetria előkészítő)",
+        "reason": "Telemetria gyűjtő",
+        "action": "uninstall_and_hide"
+      }
+    ],
+    "recommended": [],
+    "notes": "Windows 8 support 2016-ban ért véget. Frissítés W8.1-re erősen ajánlott (ingyenes volt)."
+  },
+
+  "Windows_81": {
+    "_build": "6.3",
+    "_support_ended": "2023-01-10",
+    "_ps_available": true,
+    "_ps_versions": {
+      "installed": "4.0",
+      "minimum": "4.0",
+      "recommended": "5.1",
+      "best": "5.1",
+      "note": "WMF 5.1 ajánlott."
+    },
+    "_script_type": "bat_launcher_for_ps1",
+    "required": [
+      {
+        "kb": "KB2919355",
+        "desc": "Windows 8.1 Update 1 - alapvető frissítés",
+        "critical": true,
+        "install_order": 1
+      }
+    ],
+    "harmful": [
+      {
+        "kb": "KB3035583",
+        "desc": "Get Windows 10",
+        "reason": "GWX",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB2976978",
+        "desc": "Telemetria előkészítő",
+        "reason": "Telemetria",
+        "action": "uninstall_and_hide"
+      },
+      {
+        "kb": "KB3068708",
+        "desc": "Telemetria",
+        "reason": "Telemetria",
+        "action": "uninstall_and_hide"
+      }
+    ],
+    "recommended": [],
+    "notes": ""
+  },
+
+  "Windows_10": {
+    "_build": "10.0",
+    "_build_min": 10240,
+    "_support_varies": true,
+    "_ps_available": true,
+    "_ps_versions": {
+      "installed": "5.1",
+      "minimum": "5.1",
+      "recommended": "5.1",
+      "best": "7.x (PS Core)",
+      "note": "PS 7.x (Core) opcionálisan telepíthető, de az 5.1 minden feladathoz elegendő."
+    },
+    "_script_type": "ps1_native",
+    "required": [],
+    "harmful": [
+      {
+        "kb": "KB4524244",
+        "desc": "Problémás biztonsági frissítés (rendszer-indítási hibákat okozhat)",
+        "reason": "Microsoft visszavonta, boot problémákat okoz",
+        "action": "uninstall_and_hide"
+      }
+    ],
+    "recommended": [],
+    "builtin_disable": [
+      "BingSearch",
+      "Telemetry",
+      "DiagTrack",
+      "AdvertisingID",
+      "ActivityHistory",
+      "StartMenuSuggestions"
+    ],
+    "notes": "W10 esetén a beépített PS1 szkriptek elegendők. LTSC verzió ajánlott szervizelési célra."
+  },
+
+  "Windows_11": {
+    "_build": "10.0",
+    "_build_min": 22000,
+    "_ps_available": true,
+    "_ps_versions": {
+      "installed": "5.1",
+      "minimum": "5.1",
+      "recommended": "5.1",
+      "best": "7.x (PS Core)",
+      "note": "PS 7.x opcionális, de ajánlott."
+    },
+    "_script_type": "ps1_native",
+    "required": [],
+    "harmful": [],
+    "recommended": [],
+    "builtin_disable": [
+      "BingSearch",
+      "Telemetry",
+      "DiagTrack",
+      "AdvertisingID",
+      "ActivityHistory",
+      "StartMenuSuggestions",
+      "TaskbarWidgets",
+      "ChatIcon"
+    ],
+    "notes": "W11 esetén a PS1 szkriptek natívan futnak. 22H2+ build ajánlott."
+  }
+}
