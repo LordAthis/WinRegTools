@@ -6,7 +6,7 @@
     Kompatibilis: Windows XP (Indexing Service), Vista/7/8/10/11 (Windows Search)
     Futtatás: PowerShell ADMINKÉNT
 .NOTES
-    RTS Framework - LordAthis Szervizem/Boltom
+    RTS Framework - LordAthis
     Verzió: 1.0
 #>
 
