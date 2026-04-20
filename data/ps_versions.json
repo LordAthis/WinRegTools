@@ -1,7 +1,7 @@
 {
   "_comment": "RTS Framework - PowerShell verzió ajánlások OS-enként",
   "_version": "1.0",
-  "_author": "LordAthis Szervizem/Boltom",
+  "_author": "LordAthis",
 
   "ps_versions": {
     "1.0": {
