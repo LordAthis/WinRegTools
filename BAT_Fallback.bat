@@ -192,11 +192,11 @@ goto MENU
 :: ─── 5. BITS / WU korlátozás ─────────────────────────────────────────────────
 :LIMIT_WU
 echo.
-echo  [*] Windows Update beallitas: csak ertesite mod...
+echo  [*] Windows Update beallitas: csak ertesito mod...
 
 :: AUOptions: 2 = Notify before download
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update" /v AUOptions /t REG_DWORD /d 2 /f >nul 2>&1
-echo  [OK] AUOptions=2 (csak ertesite)
+echo  [OK] AUOptions=2 (csak ertesito)
 
 :: BITS korlátozás
 sc config bits start= demand >nul 2>&1
