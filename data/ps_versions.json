@@ -1,0 +1,61 @@
+{
+  "_comment": "RTS Framework - PowerShell verzió ajánlások OS-enként",
+  "_version": "1.0",
+  "_author": "LordAthis Szervizem/Boltom",
+
+  "ps_versions": {
+    "1.0": {
+      "wmf_package": "Beépített XP SP2/Vista esetén",
+      "download_url": "N/A",
+      "min_ram_mb": 256,
+      "notes": "Csak XP-n releváns. Elavult, kerülendő."
+    },
+    "2.0": {
+      "wmf_package": "WMF 2.0",
+      "download_url": "https://www.microsoft.com/download/details.aspx?id=16818",
+      "min_ram_mb": 256,
+      "supported_os": ["XP SP3", "Vista SP1+"],
+      "notes": "XP-n ez a maximum. Stabil, alacsony erőforrásigény."
+    },
+    "3.0": {
+      "wmf_package": "WMF 3.0",
+      "download_url": "https://www.microsoft.com/download/details.aspx?id=34595",
+      "min_ram_mb": 512,
+      "supported_os": ["W7 SP1", "W8"],
+      "notes": "W7-re telepíthető, de PS 4.0 jobb. XP-n NEM fut!"
+    },
+    "4.0": {
+      "wmf_package": "WMF 4.0",
+      "download_url": "https://www.microsoft.com/download/details.aspx?id=40855",
+      "min_ram_mb": 512,
+      "supported_os": ["W7 SP1", "W8", "W8.1"],
+      "notes": "W7-re ajánlott minimum. Stabil, nem túl erőforrás-igényes."
+    },
+    "5.1": {
+      "wmf_package": "WMF 5.1",
+      "download_url": "https://www.microsoft.com/download/details.aspx?id=54616",
+      "min_ram_mb": 1024,
+      "supported_os": ["W7 SP1", "W8.1", "W10", "W11"],
+      "notes": "W7/W8.1-re ajánlott HA van elegendő RAM (1GB+). W10/W11-en beépített.",
+      "warning": "Lassabb gépen (1GB RAM alatt) maradj PS 4.0-nál!"
+    },
+    "7.x": {
+      "wmf_package": "PowerShell Core (külön telepítő)",
+      "download_url": "https://github.com/PowerShell/PowerShell/releases",
+      "min_ram_mb": 2048,
+      "supported_os": ["W10", "W11"],
+      "notes": "Modern, cross-platform PS. W10/W11-re opcionális extra. Régi OS-en felesleges."
+    }
+  },
+
+  "os_recommendation": {
+    "Windows_95":  { "ps_available": false, "use": "bat_only", "reason": "PS nem létezik ezen az OS-en" },
+    "Windows_98":  { "ps_available": false, "use": "bat_only", "reason": "PS nem létezik ezen az OS-en" },
+    "Windows_XP":  { "ps_available": "optional", "recommended_ps": "2.0", "use": "bat_primary_ps_secondary", "reason": "PS 2.0 telepíthető WMF 2.0-val, de csak ha van 512MB RAM és SP3. Alapból .bat!" },
+    "Windows_7":   { "ps_available": true,     "recommended_ps": "4.0", "best_ps": "5.1", "use": "bat_launcher_calls_ps1", "reason": "PS 2.0 beépített, de 4.0/5.1 ajánlott WMF-fel. .bat indítja a .ps1-et bypass-szal." },
+    "Windows_8":   { "ps_available": true,     "recommended_ps": "4.0", "best_ps": "5.1", "use": "bat_launcher_calls_ps1", "reason": "PS 3.0 beépített. WMF 4.0/5.1 ajánlott." },
+    "Windows_81":  { "ps_available": true,     "recommended_ps": "5.1", "best_ps": "5.1", "use": "bat_launcher_calls_ps1", "reason": "PS 4.0 beépített. WMF 5.1 ajánlott." },
+    "Windows_10":  { "ps_available": true,     "recommended_ps": "5.1", "best_ps": "7.x", "use": "ps1_direct", "reason": "PS 5.1 beépített. Natív futtatás." },
+    "Windows_11":  { "ps_available": true,     "recommended_ps": "5.1", "best_ps": "7.x", "use": "ps1_direct", "reason": "PS 5.1 beépített. Natív futtatás." }
+  }
+}
