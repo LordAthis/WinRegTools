@@ -11,7 +11,7 @@
     Kompatibilis: Windows 7 SP1 (x86 és x64)
     Futtatás: PowerShell ADMINKÉNT
 .NOTES
-    RTS Framework - LordAthis Szervizem/Boltom
+    RTS Framework - LordAthis
     Verzió: 1.0
 #>
 
@@ -29,7 +29,7 @@ Write-Host ""
 Write-Host "╔══════════════════════════════════════════════════════════╗" -ForegroundColor Red
 Write-Host "║         WINDOWS 7 - MENTO SZKRIPT                      ║" -ForegroundColor Red
 Write-Host "║   Telemetria KB-k eltavolitas + Indexelo javitas        ║" -ForegroundColor Red
-Write-Host "║   LordAthis Szervizem/Boltom - RTS Framework           ║" -ForegroundColor Red
+Write-Host "║   LordAthis - RTS Framework                            ║" -ForegroundColor Red
 Write-Host "╚══════════════════════════════════════════════════════════╝" -ForegroundColor Red
 Write-Host ""
 Write-Host " OS: $([System.Environment]::OSVersion.VersionString)" -ForegroundColor Cyan
