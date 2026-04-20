@@ -5,7 +5,6 @@ title RTS Framework - Launcher
 
 :: ============================================================
 :: RTS Framework - Universal Launcher
-:: LordAthis Szervizem/Boltom
 :: Verziő: 1.0
 ::
 :: Feladat: OS detektálás, PS ellenőrzés/ajánlás/telepítés,
@@ -44,7 +43,6 @@ cls
 echo.
 echo  ╔══════════════════════════════════════════════════╗
 echo  ║       RTS Framework - Universal Launcher        ║
-echo  ║       LordAthis Szervizem / Boltom              ║
 echo  ╚══════════════════════════════════════════════════╝
 echo.
 
@@ -89,14 +87,14 @@ echo  └───────────────────────�
 echo.
 set /p CHOICE=" Valasztod (0-8): "
 
-if "%CHOICE%"=="1" call :RUN_SCRIPT "01_Disable-BingSearch"
-if "%CHOICE%"=="2" call :RUN_SCRIPT "02_Disable-StartMenuBing"
-if "%CHOICE%"=="3" call :RUN_SCRIPT "03_Disable-Telemetry"
-if "%CHOICE%"=="4" call :RUN_SCRIPT "04_Disable-Indexing"
-if "%CHOICE%"=="5" call :RUN_SCRIPT "05_Clean-WinSxS"
-if "%CHOICE%"=="6" call :RUN_SCRIPT "06_Create-RestorePoint"
-if "%CHOICE%"=="7" call :RUN_SCRIPT "07_W7_Rescue"
-if "%CHOICE%"=="8" call :RUN_SCRIPT "08_KB_Checker"
+if "%CHOICE%"=="1" call :RUN_SCRIPT "Disable-BingSearch"
+if "%CHOICE%"=="2" call :RUN_SCRIPT "Disable-StartMenuBing"
+if "%CHOICE%"=="3" call :RUN_SCRIPT "Disable-Telemetry"
+if "%CHOICE%"=="4" call :RUN_SCRIPT "Disable-Indexing"
+if "%CHOICE%"=="5" call :RUN_SCRIPT "Clean-WinSxS"
+if "%CHOICE%"=="6" call :RUN_SCRIPT "Create-RestorePoint"
+if "%CHOICE%"=="7" call :RUN_SCRIPT "W7_Rescue"
+if "%CHOICE%"=="8" call :RUN_SCRIPT "KB_Checker"
 if "%CHOICE%"=="0" goto :EOF
 
 goto MENU
