@@ -1,12 +1,12 @@
 @echo off
 setlocal EnableDelayedExpansion
 chcp 65001 >nul 2>&1
-title RTS - XP/W7 BAT Mod (PS nelkul)
+title XP/W7 BAT Mod (PS nelkul)
 
 :: ============================================================
 :: RTS Framework - BAT fallback szkriptek
 :: XP-re es PS nelkuli W7-re
-:: LordAthis Szervizem/Boltom - Verzio 1.0
+:: Verzio 1.0
 ::
 :: Nem igenyel PowerShell-t!
 :: reg add, sc, net stop, wusa parancsokat hasznal.
