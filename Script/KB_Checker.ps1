@@ -32,7 +32,7 @@ Clear-Host
 Write-Host ""
 Write-Host "╔══════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
 Write-Host "║    RTS Framework - KB Ellenorzo / Frissites-kezelo     ║" -ForegroundColor Cyan
-Write-Host "║    LordAthis Szervizem/Boltom                          ║" -ForegroundColor Cyan
+Write-Host "║    LordAthis                                           ║" -ForegroundColor Cyan
 Write-Host "╚══════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
 Write-Host " OS       : $([System.Environment]::OSVersion.VersionString)" -ForegroundColor White
@@ -222,7 +222,7 @@ Write-Host ""
 Write-Host "  Jelentes mentve: $(Join-Path $env:TEMP 'RTS_KB_Report.txt')" -ForegroundColor DarkGray
 
 # Jelentés mentése
-$reportPath = Join-Path $env:TEMP "RTS_KB_Report.txt"
+$reportPath = Join-Path $env:TEMP "KB_Report.txt"
 $report = @"
 RTS Framework - KB Ellenorzo Jelentes
 ======================================
