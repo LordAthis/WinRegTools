@@ -10,7 +10,7 @@
     XP: WinSxS nem létezik / más struktúra – szkript leáll.
     Futtatás: PowerShell ADMINKÉNT
 .NOTES
-    RTS Framework - LordAthis Szervizem/Boltom
+    RTS Framework - LordAthis
     Verzió: 1.0
 #>
 
