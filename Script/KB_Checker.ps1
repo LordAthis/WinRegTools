@@ -8,7 +8,7 @@
     Kompatibilis: Windows 7, 8, 8.1, 10, 11
     Futtatás: PowerShell ADMINKÉNT
 .NOTES
-    RTS Framework - LordAthis Szervizem/Boltom
+    RTS Framework - LordAthis
     Verzió: 1.0
 #>
 
