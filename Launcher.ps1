@@ -23,7 +23,7 @@ $LauncherLog = Join-Path $LogFolder "$(Get-Date -Format 'yyyy-MM-dd')_Launcher_s
 function Write-SessionLog ([string]$msg) {
     "[$(Get-Date -Format 'HH:mm:ss')] $msg" | Out-File -FilePath $LauncherLog -Encoding UTF8 -Append
 }
-Write-SessionLog "=== Session indult | OS: $([System.Environment]::OSVersion.VersionString) | User: $env:USERNAME@$env:COMPUTERNAME ==="
+Write-SessionLog "=== Session indult | OS: $([Environment]::OSVersion.VersionString) | User: $($env:USERNAME)@$($env:COMPUTERNAME) ==="
 
 # ─── Menü ─────────────────────────────────────────────────────────────────────
 function Show-Menu {
