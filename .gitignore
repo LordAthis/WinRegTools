@@ -1,0 +1,14 @@
+# WinRegTools - .gitignore
+
+# Log fájlok - gép-specifikus adatok, ne kerüljenek a repóba!
+LOG/
+*.log
+
+# Windows általános
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temp
+*.tmp
+*.temp
