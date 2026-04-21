@@ -47,8 +47,9 @@ if ($osMajor -eq 6 -and $osMinor -eq 0) {
     exit 0
 }
 
-# ─── WinSxS méret lekérdezése ─────────────────────────────────────────────────
+# ─── WinSxS méret lekérdezése (ELŐTT) ─────────────────────────────────────────
 $winSxSPath = "$env:SystemRoot\WinSxS"
+$sizeBefore = 0  # Alaphelyzet
 Write-Host "[*] WinSxS mappa jelenlegi méretének lekérdezése..." -ForegroundColor Yellow
 try {
     $sizeBefore = (Get-ChildItem -Path $winSxSPath -Recurse -Force -ErrorAction SilentlyContinue |
@@ -125,9 +126,6 @@ foreach ($cat in $categories) {
 Start-Process "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait -ErrorAction SilentlyContinue
 Write-Host "  [OK] Disk Cleanup befejezve" -ForegroundColor Green
 
-# A méret lekérdezés elé érdemes betenni:
-$sizeBefore = 0
-$sizeAfter = 0
 
 # ─── WinSxS méret újra ───────────────────────────────────────────────────────
 Write-Host ""
