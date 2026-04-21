@@ -35,13 +35,16 @@ function Show-Menu {
     Write-Host " 1  Hosszu nevek (LongPaths)"
     Write-Host " 2  Lapozofajl urites (SwapDelete)"
     Write-Host " 3  RPC Hiba javitasa"
-    Write-Host " 4  WinSxS takaritas"
-    Write-Host " 5  Bing Keresések Letiltasa"
-    Write-Host " 6  Indexeles Letiltasa"
-    Write-Host " 7  Bing Start Menubol kitiltasa"
-    Write-Host " 8  Telemetria Letiltasa"
-    Write-Host " 9  KB Checker - Frissitesek elemzese"
-    Write-Host " 10 Visszaallitasi pont letrehozasa"
+    Write-Host " 4  A Windows Update Cache törlése (Lemezterület felszabadítása)"
+    Write-Host " 5  WinSxS takaritas"
+    Write-Host " 6  Bing Keresések Letiltasa"
+    Write-Host " 7  Indexeles Letiltasa"
+    Write-Host " 8  Bing Start Menubol kitiltasa"
+    Write-Host " 9  Telemetria Letiltasa"
+    Write-Host " 10  KB Checker - Frissitesek elemzese"
+    Write-Host " 11  KB Checker - Aktualizálása"
+    Write-Host " 12  Visszaallitasi pont letrehozasa"
+    Write-Host " 13  Napi több 'Visszaallitasi pont' engedélyezése"
     Write-Host " X  Kilepes" -ForegroundColor Red
     Write-Host "----------------------------------------"
 }
@@ -84,22 +87,31 @@ do {
             Run-Script "LongPaths_On_Off.ps1"
             Run-Script "SwapDeleteToShutdown.ps1"
             Run-Script "RPCHelper_Fix.ps1"
+            Run-Script "Clean-UpdateCache.ps1"
+            Run-Script "RestorePoint_24HourLimitRelease.ps1"
+            Run-Script "Clean-UpdateCache.ps1"
             Run-Script "Clean-WinSxS.ps1"
             Run-Script "Disable-BingSearch.ps1"
             Run-Script "Disable-Indexing.ps1"
             Run-Script "Disable-StartMenuBing.ps1"
             Run-Script "Disable-Telemetry.ps1"
+            Run-Script "KB_Checker.ps1"
+            Run-Script "KB_Aktualizer.ps1"
+            Run-Script "Create-RestorePoint.ps1"
         }
         "1"  { Run-Script "LongPaths_On_Off.ps1" }
         "2"  { Run-Script "SwapDeleteToShutdown.ps1" }
         "3"  { Run-Script "RPCHelper_Fix.ps1" }
-        "4"  { Run-Script "Clean-WinSxS.ps1" }
-        "5"  { Run-Script "Disable-BingSearch.ps1" }
-        "6"  { Run-Script "Disable-Indexing.ps1" }
-        "7"  { Run-Script "Disable-StartMenuBing.ps1" }
-        "8"  { Run-Script "Disable-Telemetry.ps1" }
-        "9"  { Run-Script "KB_Checker.ps1" }
-        "10" { Run-Script "Create-RestorePoint.ps1" }
+        "4"  { Run-Script "Clean-UpdateCache.ps1" }
+        "5"  { Run-Script "Clean-WinSxS.ps1" }
+        "6"  { Run-Script "Disable-BingSearch.ps1" }
+        "7"  { Run-Script "Disable-Indexing.ps1" }
+        "8"  { Run-Script "Disable-StartMenuBing.ps1" }
+        "9"  { Run-Script "Disable-Telemetry.ps1" }
+        "10"  { Run-Script "KB_Checker.ps1" }
+        "11"  { Run-Script "KB_Aktualizer.ps1" }
+        "12" { Run-Script "Create-RestorePoint.ps1" }
+        "13" { Run-Script "RestorePoint_24HourLimitRelease.ps1" }
         "X"  {
             Write-SessionLog "Kilepes"
             Write-Host "Viszlat!" -ForegroundColor Cyan
