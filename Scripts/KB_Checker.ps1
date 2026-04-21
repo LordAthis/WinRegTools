@@ -1,16 +1,25 @@
-#Requires -RunAsAdministrator
-<#
-.SYNOPSIS
-    KB Ellenőrző és Frissítés-kezelő szkript.
-    Ellenőrzi a kötelező és káros KB-k állapotát, és elvégzi a szükséges
-    eltávolításokat / jelzi a hiányzó szükséges frissítéseket.
-.DESCRIPTION
-    Kompatibilis: Windows 7, 8, 8.1, 10, 11
-    Futtatás: PowerShell ADMINKÉNT
-.NOTES
-    RTS Framework - LordAthis
-    Verzió: 1.0
-#>
+# KB_Checker.ps1
+# WinRegTools - LordAthis
+# Csak a listában szereplő KB-kat ellenőrzi (NEM az összes frissítést!)
+# Try-Catch minden lekérdezésnél, nincs automatikus böngésző-megnyitás.
+
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# ─── Logger betöltése ─────────────────────────────────────────────────────────
+$loggerPath = Join-Path $PSScriptRoot "_Logger.ps1"
+if (Test-Path $loggerPath) {
+    . $loggerPath
+} else {
+    # Fallback ha valaki önállóan futtatja
+    function Write-LogOK    { param([string]$m) Write-Host "  [OK]   $m" -ForegroundColor Green }
+    function Write-LogWarn  { param([string]$m) Write-Host "  [!!]   $m" -ForegroundColor Yellow }
+    function Write-LogError { param([string]$m) Write-Host "  [HIBA] $m" -ForegroundColor Red }
+    function Write-LogSkip  { param([string]$m) Write-Host "  [--]   $m" -ForegroundColor DarkGray }
+    function Write-LogInfo  { param([string]$m) Write-Host "  [*]    $m" -ForegroundColor Cyan }
+    function Write-LogSection { param([string]$t) Write-Host "`n--- $t ---" -ForegroundColor Magenta }
+    function Close-Log {}
+    $script:LogFile = $null
+}
 
 # ─── OS detektálás ────────────────────────────────────────────────────────────
 $osVersion = [System.Environment]::OSVersion.Version
@@ -28,220 +37,256 @@ $osKey = switch ($true) {
     default                                    { "Unknown" }
 }
 
-Clear-Host
+# ─── Fejléc ───────────────────────────────────────────────────────────────────
 Write-Host ""
-Write-Host "╔══════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║    RTS Framework - KB Ellenorzo / Frissites-kezelo     ║" -ForegroundColor Cyan
-Write-Host "║    LordAthis                                           ║" -ForegroundColor Cyan
-Write-Host "╚══════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
-Write-Host ""
-Write-Host " OS       : $([System.Environment]::OSVersion.VersionString)" -ForegroundColor White
-Write-Host " OS kulcs : $osKey" -ForegroundColor White
-Write-Host " Datum    : $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -ForegroundColor White
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "  KB Checker - Frissites-kezelő        " -ForegroundColor Cyan
+Write-Host "  WinRegTools - LordAthis               " -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "  OS    : $([System.Environment]::OSVersion.VersionString)" -ForegroundColor White
+Write-Host "  Build : $osKey" -ForegroundColor White
+Write-Host "  Datum : $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -ForegroundColor White
 Write-Host ""
 
 if ($osKey -eq "Unknown") {
-    Write-Warning "Ismeretlen Windows verzio. A szkript leall."
-    exit 1
+    Write-LogError "Ismeretlen Windows verzio, a script leall."
+    Close-Log
+    return
 }
 
-# ─── JSON betöltése ───────────────────────────────────────────────────────────
-$scriptDir  = Split-Path -Parent $MyInvocation.MyCommand.Path
-$jsonPath   = Join-Path (Split-Path $scriptDir -Parent) "data\kb_lists.json"
+# ─── KB listák – OS-enként beépítve (nincs külső JSON függőség!) ──────────────
+# Struktúra: @{ KB="KBxxxxxxx"; Desc="Leírás"; Critical=$true/$false }
 
-# Ha nem találja relatívan, próbálkozzon a script mellől
-if (-not (Test-Path $jsonPath)) {
-    $jsonPath = Join-Path $scriptDir "kb_lists.json"
-}
-if (-not (Test-Path $jsonPath)) {
-    $jsonPath = Join-Path $scriptDir "..\data\kb_lists.json"
-}
+$kbDatabase = @{
 
-if (-not (Test-Path $jsonPath)) {
-    Write-Warning "kb_lists.json nem talalhato! Keresve: $jsonPath"
-    Write-Warning "Belso adatokkal folytatom (W7 lista)..."
-    $useBuiltin = $true
-} else {
-    Write-Host " KB lista betoltve: $jsonPath" -ForegroundColor DarkGray
-    $useBuiltin = $false
-    try {
-        $kbData   = Get-Content -Path $jsonPath -Raw | ConvertFrom-Json
-        $osConfig = $kbData.$osKey
-    } catch {
-        Write-Warning "JSON beolvasas sikertelen: $($_.Exception.Message)"
-        $useBuiltin = $true
+    "Windows_10" = @{
+        Required = @()   # W10-en nincs kötelező egyedi KB, a WU kezeli
+        Harmful  = @(
+            @{ KB="KB4524244"; Desc="Visszavont frissites - boot hibakat okoz";     Critical=$true }
+            @{ KB="KB3035583"; Desc="Get Windows 10 (GWX) - ha maradt volna";      Critical=$false }
+        )
+    }
+
+    "Windows_11" = @{
+        Required = @()
+        Harmful  = @(
+            @{ KB="KB4524244"; Desc="Visszavont frissites - boot hibakat okoz";     Critical=$true }
+        )
+    }
+
+    "Windows_81" = @{
+        Required = @(
+            @{ KB="KB2919355"; Desc="Windows 8.1 Update 1 - alapfrissites";         Critical=$true }
+        )
+        Harmful  = @(
+            @{ KB="KB3035583"; Desc="Get Windows 10 (GWX)";                         Critical=$true }
+            @{ KB="KB2976978"; Desc="Telemetria elokezito (W8.1)";                  Critical=$true }
+            @{ KB="KB3068708"; Desc="Telemetria";                                   Critical=$true }
+        )
+    }
+
+    "Windows_8" = @{
+        Required = @()
+        Harmful  = @(
+            @{ KB="KB3035583"; Desc="Get Windows 10 (GWX)";                         Critical=$true }
+            @{ KB="KB2976978"; Desc="Telemetria elokezito (W8)";                    Critical=$true }
+        )
+    }
+
+    "Windows_7" = @{
+        Required = @(
+            @{ KB="KB3020369"; Desc="Servicing Stack Update - ELOFELTETAL!";        Critical=$true }
+            @{ KB="KB3125574"; Desc="Convenience Rollup (SP2-szeru csomag)";        Critical=$true }
+            @{ KB="KB3138612"; Desc="WU Client - gyors WU szkenneles";              Critical=$true }
+            @{ KB="KB4474419"; Desc="SHA-2 Code Signing Support";                   Critical=$true }
+            @{ KB="KB4490628"; Desc="Servicing Stack Update 2019";                  Critical=$true }
+        )
+        Harmful  = @(
+            @{ KB="KB3035583"; Desc="Get Windows 10 (GWX)";                         Critical=$true }
+            @{ KB="KB2952664"; Desc="Telemetria elokezito";                         Critical=$true }
+            @{ KB="KB3068708"; Desc="Telemetria";                                   Critical=$true }
+            @{ KB="KB3022345"; Desc="Telemetria (korabbi verzio)";                  Critical=$true }
+            @{ KB="KB3075249"; Desc="Telemetria - consent.exe injekcio";            Critical=$true }
+            @{ KB="KB3080149"; Desc="Telemetria";                                   Critical=$true }
+            @{ KB="KB3021917"; Desc="W10 readiness / diagnostika";                  Critical=$false }
+            @{ KB="KB3044374"; Desc="W10 upgrade elokezito";                        Critical=$false }
+            @{ KB="KB2990214"; Desc="W10 upgrade elokezito (korabbi)";              Critical=$false }
+        )
+    }
+
+    "Windows_XP" = @{
+        Required = @(
+            @{ KB="KB2347290"; Desc="SHA-2 Code Signing support";                   Critical=$true }
+        )
+        Harmful  = @(
+            @{ KB="KB898461";  Desc="Windows Genuine Advantage - nag screen";       Critical=$false }
+        )
     }
 }
 
-# ─── Beépített listák (JSON nélküli fallback) ─────────────────────────────────
-if ($useBuiltin -or $null -eq $osConfig) {
-    Write-Host " [Beepitett W7 lista hasznalata]" -ForegroundColor DarkGray
-
-    $requiredKBs = @(
-        @{ KB="KB3020369"; Desc="Servicing Stack Update (ELOFELTETAL!)" },
-        @{ KB="KB3125574"; Desc="Convenience Rollup (SP2-szeru csomag)" },
-        @{ KB="KB3138612"; Desc="Windows Update Client - gyors WU szkenneles" },
-        @{ KB="KB4474419"; Desc="SHA-2 Code Signing Support" },
-        @{ KB="KB4490628"; Desc="Servicing Stack Update 2019" }
-    )
-    $harmfulKBs = @(
-        @{ KB="KB3035583"; Desc="Get Windows 10 (GWX)" },
-        @{ KB="KB2952664"; Desc="Telemetria elokezito" },
-        @{ KB="KB3068708"; Desc="Telemetria" },
-        @{ KB="KB3022345"; Desc="Telemetria (korabbi)" },
-        @{ KB="KB3075249"; Desc="Telemetria (consent.exe)" },
-        @{ KB="KB3080149"; Desc="Telemetria" },
-        @{ KB="KB3021917"; Desc="W10 readiness diagnosztika" }
-    )
+# Aktuális OS listájának kiválasztása
+if ($kbDatabase.ContainsKey($osKey)) {
+    $requiredKBs = $kbDatabase[$osKey].Required
+    $harmfulKBs  = $kbDatabase[$osKey].Harmful
 } else {
-    # JSON-ból olvasott listák
     $requiredKBs = @()
-    if ($osConfig.required) {
-        foreach ($item in $osConfig.required) {
-            $requiredKBs += @{ KB=$item.kb; Desc=$item.desc }
-        }
-    }
-    $harmfulKBs = @()
-    if ($osConfig.harmful) {
-        foreach ($item in $osConfig.harmful) {
-            $harmfulKBs += @{ KB=$item.kb; Desc=$item.desc }
-        }
-    }
+    $harmfulKBs  = @()
+    Write-LogWarn "Nincs KB lista ehhez az OS-hez: $osKey"
 }
 
-# ─── Telepített KB lista lekérése (egyszerre, gyorsabb) ──────────────────────
-Write-Host "[*] Telepitett frissitesek lekerese..." -ForegroundColor Yellow
-Write-Host "    (Ez eltarthat egy percig W7-en!)" -ForegroundColor DarkGray
-$installedHotfixes = Get-HotFix -ErrorAction SilentlyContinue | Select-Object -ExpandProperty HotFixID
-Write-Host "    Megtalalt frissitesek szama: $($installedHotfixes.Count)" -ForegroundColor DarkGray
-Write-Host ""
+# ─── Segédfüggvény: egyetlen KB ellenőrzése ───────────────────────────────────
+# Get-HotFix -Id KB... CSAK azt a KB-t kérdezi le, nem az összeset!
+# Sokkal gyorsabb, mint Get-HotFix (az összes).
+
+function Test-KBInstalled ([string]$KBId) {
+    try {
+        $result = Get-HotFix -Id $KBId -ErrorAction Stop
+        return $true
+    } catch [System.ArgumentException] {
+        # "Cannot find the requested hotfix" - nincs telepítve, ez normális
+        return $false
+    } catch {
+        # WMI hiba, zárolás, egyéb - nem tudjuk eldönteni
+        return $null  # null = ismeretlen
+    }
+}
 
 # ─── KÖTELEZŐ KB-K ELLENŐRZÉSE ───────────────────────────────────────────────
-Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Green
-Write-Host " KOTELEZO / AJANLOTT FRISSITESEK ALLAPOTA" -ForegroundColor Green
-Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Green
-Write-Host ""
+Write-LogSection "KOTELEZO / AJANLOTT FRISSITESEK"
 
 $missingRequired = @()
+$unknownRequired = @()
 
-foreach ($item in $requiredKBs) {
-    $kb = $item.KB
-    if ($installedHotfixes -contains $kb) {
-        Write-Host "  [✓ TELEPITVE] $kb - $($item.Desc)" -ForegroundColor Green
-    } else {
-        Write-Host "  [✗ HIANYZO ] $kb - $($item.Desc)" -ForegroundColor Red
-        $missingRequired += $item
+if ($requiredKBs.Count -eq 0) {
+    Write-LogSkip "Ennél az OS verziónál nincs definiált kötelező KB lista."
+} else {
+    foreach ($item in $requiredKBs) {
+        $installed = Test-KBInstalled $item.KB
+        if ($installed -eq $true) {
+            Write-LogOK "$($item.KB) - $($item.Desc)"
+        } elseif ($installed -eq $false) {
+            $label = if ($item.Critical) { "[KRITIKUS - HIANYZO]" } else { "[HIANYZO]" }
+            Write-Host "  $label $($item.KB) - $($item.Desc)" -ForegroundColor Red
+            if ($script:LogFile) { "  $label $($item.KB) - $($item.Desc)" | Out-File $script:LogFile -Append }
+            $missingRequired += $item
+        } else {
+            Write-LogWarn "$($item.KB) - Lekerdezés sikertelen (WMI hiba / zarolva)"
+            $unknownRequired += $item
+        }
     }
 }
 
 Write-Host ""
 if ($missingRequired.Count -gt 0) {
-    Write-Host "  [!] $($missingRequired.Count) kotelező frissités HIÁNYZIK!" -ForegroundColor Red
-    Write-Host "  Ezeket manuálisan kell telepíteni (WSUS Offline Update ajánlott)." -ForegroundColor Yellow
-} else {
-    Write-Host "  [OK] Minden kotelezo frissites telepitve van." -ForegroundColor Green
+    Write-LogWarn "$($missingRequired.Count) fontos frissites HIANYZO!"
+    Write-LogInfo "Telepiteshez hasznalj WSUS Offline Update-et: https://www.wsusoffline.net"
+} elseif ($requiredKBs.Count -gt 0) {
+    Write-LogOK "Minden kotelező frissites megvan."
+}
+if ($unknownRequired.Count -gt 0) {
+    Write-LogWarn "$($unknownRequired.Count) frissites allapota ismeretlen (lekerdezes sikertelen)."
 }
 
-# ─── KÁROS KB-K ELLENŐRZÉSE ÉS ELTÁVOLÍTÁSA ──────────────────────────────────
-Write-Host ""
-Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Red
-Write-Host " KAROS FRISSITESEK ELLENORZESE" -ForegroundColor Red
-Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Red
-Write-Host ""
+# ─── KÁROS KB-K ELLENŐRZÉSE ──────────────────────────────────────────────────
+Write-LogSection "KAROS FRISSITESEK ELLENORZESE"
 
 $foundHarmful = @()
+$queryFailed  = @()
 
-foreach ($item in $harmfulKBs) {
-    $kb = $item.KB
-    if ($installedHotfixes -contains $kb) {
-        Write-Host "  [! TALALT  ] $kb - $($item.Desc)" -ForegroundColor Red
-        $foundHarmful += $item
-    } else {
-        Write-Host "  [✓ NINCS   ] $kb" -ForegroundColor DarkGray
-    }
-}
-
-Write-Host ""
-
-if ($foundHarmful.Count -eq 0) {
-    Write-Host "  [OK] Nem talalhato karos frissites." -ForegroundColor Green
+if ($harmfulKBs.Count -eq 0) {
+    Write-LogSkip "Ennél az OS verziónál nincs definiált káros KB lista."
 } else {
-    Write-Host "  [!] $($foundHarmful.Count) karos frissites talalhato!" -ForegroundColor Red
-    Write-Host ""
-    $answer = Read-Host "  Eltavolitjam most? (I=Igen, N=Nem, csak jelentes)"
-
-    if ($answer -eq "I" -or $answer -eq "i") {
-        Write-Host ""
-        Write-Host "  Eltavolitas indul..." -ForegroundColor Yellow
-        $removedOK = 0
-        $removedFail = 0
-
-        foreach ($item in $foundHarmful) {
-            $kbNum = $item.KB.Replace("KB","")
-            Write-Host "  [-] $($item.KB) torlese..." -ForegroundColor Yellow
-
-            $proc = Start-Process -FilePath "wusa.exe" `
-                                  -ArgumentList "/uninstall /kb:$kbNum /quiet /norestart" `
-                                  -Wait -PassThru -ErrorAction SilentlyContinue
-
-            if ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010) {
-                Write-Host "      [OK] Eltavolitva" -ForegroundColor Green
-                $removedOK++
-            } else {
-                Write-Host "      [!] Hiba (kod: $($proc.ExitCode)) - kezi eltavolitas szukseges" -ForegroundColor Red
-                $removedFail++
-            }
+    foreach ($item in $harmfulKBs) {
+        $installed = Test-KBInstalled $item.KB
+        if ($installed -eq $true) {
+            Write-Host "  [TALALT!] $($item.KB) - $($item.Desc)" -ForegroundColor Red
+            if ($script:LogFile) { "  [TALALT!] $($item.KB) - $($item.Desc)" | Out-File $script:LogFile -Append }
+            $foundHarmful += $item
+        } elseif ($installed -eq $false) {
+            Write-LogSkip "$($item.KB) - nincs telepitve"
+        } else {
+            Write-LogWarn "$($item.KB) - Lekerdezés sikertelen"
+            $queryFailed += $item
         }
+    }
+}
+
+# ─── ELTÁVOLÍTÁS ─────────────────────────────────────────────────────────────
+Write-Host ""
+
+if ($foundHarmful.Count -eq 0 -and $queryFailed.Count -eq 0) {
+    Write-LogOK "Nem talalhato karos frissites."
+} else {
+    if ($queryFailed.Count -gt 0) {
+        Write-LogWarn "$($queryFailed.Count) KB allapota nem volt lekerdezhetö (WMI hiba)."
+        Write-LogInfo "Kesi ellenorzes ajanlott: 'wmic qfe list brief'"
+    }
+
+    if ($foundHarmful.Count -gt 0) {
+        Write-Host "  $($foundHarmful.Count) karos frissites talalhato!" -ForegroundColor Red
         Write-Host ""
-        Write-Host "  Osszesites: $removedOK eltavolitva, $removedFail sikertelen" -ForegroundColor Cyan
+        Write-Host "  Eltavolitjam most? [I / N]" -ForegroundColor Yellow -NoNewline
+        $answer = Read-Host " "
+
+        if ($answer -eq "I" -or $answer -eq "i") {
+            Write-LogSection "ELTAVOLITAS"
+            $removedOK   = 0
+            $removedFail = 0
+
+            foreach ($item in $foundHarmful) {
+                $kbNum = $item.KB -replace "KB",""
+                Write-LogInfo "$($item.KB) eltavolitas..."
+
+                try {
+                    $proc = Start-Process -FilePath "wusa.exe" `
+                                          -ArgumentList "/uninstall /kb:$kbNum /quiet /norestart" `
+                                          -Wait -PassThru -ErrorAction Stop
+
+                    switch ($proc.ExitCode) {
+                        0       { Write-LogOK "$($item.KB) sikeresen eltavolitva";              $removedOK++ }
+                        3010    { Write-LogOK "$($item.KB) eltavolitva - ujrainditas szukseges"; $removedOK++ }
+                        2359302 { Write-LogSkip "$($item.KB) - nem volt telepitve (wusa)";      }
+                        default { Write-LogError "$($item.KB) - hiba (kod: $($proc.ExitCode))"; $removedFail++ }
+                    }
+                } catch {
+                    Write-LogError "$($item.KB) - wusa.exe nem futtatható: $($_.Exception.Message)"
+                    $removedFail++
+                }
+            }
+
+            Write-Host ""
+            Write-Host "  Osszesites: $removedOK eltavolitva, $removedFail sikertelen" -ForegroundColor Cyan
+            if ($script:LogFile) { "  Osszesites: $removedOK eltavolitva, $removedFail sikertelen" | Out-File $script:LogFile -Append }
+
+            if ($removedOK -gt 0) {
+                Write-LogWarn "Ujrainditas ajanlott az eltavolitas utan!"
+            }
+        } else {
+            Write-LogInfo "Eltavolitas kihagyva (csak jelentes mod)."
+        }
     }
 }
 
-# ─── ÖSSZEFOGLALÓ JELENTÉS ────────────────────────────────────────────────────
-Write-Host ""
-Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host " OSSZESITO JELENTES" -ForegroundColor Cyan
-Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "  OS          : $osKey" -ForegroundColor White
-Write-Host "  Telepitett  : $($installedHotfixes.Count) frissites" -ForegroundColor White
-Write-Host "  Kotelező   : $($requiredKBs.Count - $missingRequired.Count) / $($requiredKBs.Count) telepitve" -ForegroundColor White
-Write-Host "  Karos       : $($foundHarmful.Count) talalhato" -ForegroundColor White
+# ─── ÖSSZEFOGLALÓ ─────────────────────────────────────────────────────────────
+Write-LogSection "OSSZESITO JELENTES"
+Write-Host "  OS              : $osKey" -ForegroundColor White
+Write-Host "  Kotelezo KB-k   : $($requiredKBs.Count - $missingRequired.Count) / $($requiredKBs.Count) telepitve" -ForegroundColor White
+Write-Host "  Karos KB-k      : $($foundHarmful.Count) talalhato" -ForegroundColor White
 
-if ($missingRequired.Count -gt 0) {
+# ─── LOG FÁJLBA MENTÉS ────────────────────────────────────────────────────────
+if ($script:LogFile) {
+    # Összefoglaló szöveges blokk a log végére
+    @"
+
+OSSZESITO:
+  OS           : $osKey ($([System.Environment]::OSVersion.VersionString))
+  Kotelezo     : $($requiredKBs.Count - $missingRequired.Count) / $($requiredKBs.Count) telepitve
+  Karos talalt : $($foundHarmful.Count)
+  Ismeretlen   : $($unknownRequired.Count + $queryFailed.Count)
+"@ | Out-File -FilePath $script:LogFile -Encoding UTF8 -Append
+
     Write-Host ""
-    Write-Host "  HIANYZO FONTOS FRISSITESEK:" -ForegroundColor Yellow
-    foreach ($item in $missingRequired) {
-        Write-Host "    - $($item.KB): $($item.Desc)" -ForegroundColor Yellow
-    }
-    Write-Host ""
-    Write-Host "  WSUS Offline Update tool: https://www.wsusoffline.net" -ForegroundColor Cyan
+    Write-Host "  Log mentve: $script:LogFile" -ForegroundColor DarkGray
 }
 
-Write-Host ""
-Write-Host "  Jelentes mentve: $(Join-Path $env:TEMP 'RTS_KB_Report.txt')" -ForegroundColor DarkGray
-
-# Jelentés mentése
-$reportPath = Join-Path $env:TEMP "KB_Report.txt"
-$report = @"
-RTS Framework - KB Ellenorzo Jelentes
-======================================
-Datum    : $(Get-Date -Format 'yyyy-MM-dd HH:mm')
-OS       : $([System.Environment]::OSVersion.VersionString)
-OS kulcs : $osKey
-
-KOTELEZO FRISSITESEK:
-$(foreach ($item in $requiredKBs) {
-    $status = if ($installedHotfixes -contains $item.KB) { "TELEPITVE" } else { "HIANYZO!" }
-    "  [$status] $($item.KB) - $($item.Desc)"
-})
-
-KAROS FRISSITESEK:
-$(foreach ($item in $harmfulKBs) {
-    $status = if ($installedHotfixes -contains $item.KB) { "TELEPITVE - ELTAVOLITANDO!" } else { "nincs" }
-    "  [$status] $($item.KB) - $($item.Desc)"
-})
-"@
-
-$report | Out-File -FilePath $reportPath -Encoding UTF8 -Force
-Write-Host ""
+Close-Log
