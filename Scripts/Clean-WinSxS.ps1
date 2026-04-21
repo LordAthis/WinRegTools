@@ -31,7 +31,7 @@ Write-Host ""
 Write-Host "================================================" -ForegroundColor DarkCyan
 Write-Host "   WINSXS / COMPONENT STORE TAKARÍTÁS" -ForegroundColor DarkCyan
 Write-Host "================================================" -ForegroundColor DarkCyan
-Write-Host " OS: $([System.Environment]>::OSVersion.VersionString)"
+Write-Host " OS: $([System.Environment]::OSVersion.VersionString)"
 Write-Host ""
 
 # XP: nem támogatott
@@ -124,6 +124,10 @@ foreach ($cat in $categories) {
 }
 Start-Process "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait -ErrorAction SilentlyContinue
 Write-Host "  [OK] Disk Cleanup befejezve" -ForegroundColor Green
+
+# A méret lekérdezés elé érdemes betenni:
+$sizeBefore = 0
+$sizeAfter = 0
 
 # ─── WinSxS méret újra ───────────────────────────────────────────────────────
 Write-Host ""
