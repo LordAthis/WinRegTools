@@ -8,6 +8,7 @@ function Show-Menu {
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host "   WinRegTools - MODERN MOD (NT6+) " -ForegroundColor Cyan
     Write-Host "========================================" -ForegroundColor Cyan
+    Write-Host "0. Mind - Az összes pont végrehajtása, sorban"
     Write-Host "1. Hosszú nevek (LongPaths) kezelése"
     Write-Host "2. Lapozófájl ürítés (SwapDelete) kezelése"
     Write-Host "3. RPC Hiba javítása"
