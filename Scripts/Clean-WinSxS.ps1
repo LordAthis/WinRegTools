@@ -1,3 +1,11 @@
+# Kódolás kényszerítése az aktuális munkamenetben
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
+# Ez a trükk: megmondjuk a PowerShellnek, hogy minden scriptet UTF8-ként olvasson be a lemezről
+$PSDefaultParameterValues['*:Encoding'] = 'utf8'
+
+
 #Requires -RunAsAdministrator
 <#
 .SYNOPSIS
