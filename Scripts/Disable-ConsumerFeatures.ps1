@@ -10,12 +10,12 @@ $type = Add-Type -MemberDefinition $sig -Name "Sleep$(Get-Random)" -Namespace "W
 $type::SetThreadExecutionState([uint32]0x80000001) 
 
 
-Write-Host "--- Windows fogyasztói élmények letiltása ---" -ForegroundColor Cyan
+Write-Host "--- Windows fogyasztoi elmenyek letiltasa ---" -ForegroundColor Cyan
 $path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
 if (-not (Test-Path $path)) { New-Item $path -Force }
 Set-ItemProperty -Path $path -Name "DisableWindowsConsumerFeatures" -Value 1
-Write-Host "Kész." -ForegroundColor Green
+Write-Host "Kesz." -ForegroundColor Green
 
 # Alváskezelés visszaállítása alaphelyzetbe
 $type::SetThreadExecutionState([uint32]0x80000000)
-Write-Host "Kész. Az energiagazdálkodási korlátok feloldva." -ForegroundColor Gray
+Write-Host "Kesz. Az energiagazdalkodasi korlatok feloldva." -ForegroundColor Gray
