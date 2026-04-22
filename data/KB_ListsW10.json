@@ -1,0 +1,41 @@
+{
+  "_comment": "RTS Framework - KB Enabled/Disabled List",
+  "_version": "1.0",
+  "_author": "LordAthis",
+  "_last_updated": "2025-04",
+  "_note": "required=kötelező biztonsági frissítés | harmful=eltávolítandó | recommended=ajánlott | optional=opcionális",
+
+  "Windows_10": {
+    "_build": "10.0",
+    "_build_min": 10240,
+    "_support_varies": true,
+    "_ps_available": true,
+    "_ps_versions": {
+      "installed": "5.1",
+      "minimum": "5.1",
+      "recommended": "5.1",
+      "best": "7.x (PS Core)",
+      "note": "PS 7.x (Core) opcionálisan telepíthető, de az 5.1 minden feladathoz elegendő."
+    },
+    "_script_type": "ps1_native",
+    "required": [],
+    "harmful": [
+      {
+        "kb": "KB4524244",
+        "desc": "Problémás biztonsági frissítés (rendszer-indítási hibákat okozhat)",
+        "reason": "Microsoft visszavonta, boot problémákat okoz",
+        "action": "uninstall_and_hide"
+      }
+    ],
+    "recommended": [],
+    "builtin_disable": [
+      "BingSearch",
+      "Telemetry",
+      "DiagTrack",
+      "AdvertisingID",
+      "ActivityHistory",
+      "StartMenuSuggestions"
+    ],
+    "notes": "W10 esetén a beépített PS1 szkriptek elegendők. LTSC verzió ajánlott szervizelési célra."
+  }
+}
