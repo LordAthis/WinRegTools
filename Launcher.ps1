@@ -49,7 +49,7 @@ function Show-Menu {
     Write-Host " 16  Gyorsitja az Intezot: fajlkiterjesztesek mutatasa, (Ez a gep) az alapertelmezett a Gyorseleres helyett"
     Write-Host " 17  Letiltja az automatikusan telepulo (Candy Crush) es egyeb szemeteket"
     Write-Host " 18  MEGHAJTO IRASVEDELEM KEZELO - Felold es Zarol"
-    Write-Host " 19  "
+    Write-Host " 19  OneDrive eltavolitasa a rendszerbol"
     Write-Host " 20  "
     Write-Host " 21  "
     Write-Host " 12  Log-takaritas - 30 napnal regebbi logok torlese"
@@ -136,6 +136,7 @@ do {
             Run-Script "KB_Aktualizer.ps1"
             Run-Script "Clean-Logs.ps1"
             Run-Script "Create-RestorePoint.ps1"
+            Run-Script "Disable-OneDrive.ps1"
         }
         "A" {
             Write-SessionLog "AJANLOTT (Nepszeru) beallitasok inditasa"
@@ -150,6 +151,7 @@ do {
             # 3. Tisztítás
             Run-Script "Clean-UpdateCache.ps1"
             Run-Script "Clean-WinSxS.ps1"
+            Run-Script "Disable-OneDrive.ps1"
             # 4. Biztonság
             Run-Script "Create-RestorePoint.ps1"
             Write-Host "`n[KESZ] Az ajanlott beallitasok lefutottak!" -ForegroundColor Green
@@ -174,7 +176,7 @@ do {
         "16" { Run-Script "Optimize-Explorer.ps1" }
         "17" { Run-Script "Disable-ConsumerFeatures.ps1" }
         "18" { Run-Script "RemoveDiskProtect.ps1" }
-        "19" { Run-Script "" }
+        "19" { Run-Script "Disable-OneDrive.ps1" }
         "20" { Run-Script "" }
         "21" { Run-Script "" }
         "22" { Run-Script "" }
