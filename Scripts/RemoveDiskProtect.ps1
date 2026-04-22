@@ -6,10 +6,15 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
 }
 
-# --- Ébren tartás ---
-$signature = '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint esFlags);'
-$type = Add-Type -MemberDefinition $signature -Name "Win32Sleep" -Namespace "Win32" -PassThru
-$type::SetThreadExecutionState(0x80000001)
+# --- Ébren tartás és Laptop figyelmeztetés ---
+# API betöltése (dinamikus névvel, hogy ne legyen ütközés)
+# Futás alatt: Ébren tartás kényszerítése
+$sig = '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint esFlags);'
+$type = Add-Type -MemberDefinition $sig -Name "Sleep$(Get-Random)" -Namespace "Win32" -PassThru
+# Decimális érték használata a konverziós hiba elkerülésére (0x80000001 = 2147483649)
+[uint32]$flags = 2147483649
+$type::SetThreadExecutionState($flags)
+# --- Ébren tartás és Laptop figyelmeztetés ---
 
 $LogFile = Join-Path $PSScriptRoot "..\LOG\DiskProtection_Session.log"
 
@@ -58,7 +63,6 @@ do {
     }
 } while ($opt -ne "X" -and $opt -ne "x")
 
-
-# Alváskezelés visszaállítása alaphelyzetbe
-$type::SetThreadExecutionState(0x80000000) 
-Write-Host "Kesz. Az energiagazdalkodasi korlatok feloldva." -ForegroundColor Gray
+# Alváskezelés visszaállítása alaphelyzetbe (0x80000000 = 2147483648)
+[uint32]$reset = 2147483648
+$type::SetThreadExecutionState($reset)
