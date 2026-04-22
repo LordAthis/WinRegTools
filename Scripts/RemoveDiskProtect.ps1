@@ -34,33 +34,42 @@ do {
 
     switch ($opt) {
         "1" {
-            # ... (listázás marad) ...
-            $id = Read-Host "Lemez száma"
+            Write-Host "`n[*] Elérhető külső/másodlagos meghajtók lekérése..." -ForegroundColor Yellow
+            # Lekérdezzük a lemezeket (Rendszerlemezt kihagyva a biztonság kedvéért)
+            $disks = Get-Disk | Where-Object { $_.BusType -eq "USB" -or $_.IsSystem -eq $false }
+            
+            if (-not $disks) {
+                Write-Host "❌ Nem található feloldható (külső) meghajtó!" -ForegroundColor Red
+                Start-Sleep -Seconds 2
+                continue
+            }
+
+            $disks | Select-Object Number, FriendlyName, HealthStatus, @{Name="Védett";Expression={$_.IsReadOnly}} | Format-Table -AutoSize
+            
+            $id = Read-Host "Melyik lemez számát oldjam fel drasztikusan? (Pl. 2)"
             if ($id -ne "") {
-                Write-Host "Disk $id drasztikus feloldása..." -ForegroundColor Magenta
-                
-                # Olyan szkriptet küldünk a DiskPartnak, ami a partíciókat is pucolja
-                $dpCmd = @"
+                # Ellenőrizzük, hogy létezik-e a megadott számú lemez
+                if ($disks.Number -contains [int]$id) {
+                    Write-Host "Disk $id drasztikus feloldása (CLEAN) folyamatban..." -ForegroundColor Magenta
+                    
+                    $dpCmd = @"
 select disk $id
 attributes disk clear readonly
 online disk
-# Megpróbáljuk leszedni az 'override' jelzőt a partíciókról is
 clean
 exit
 "@
-                $dpCmd | diskpart | Out-Null
-                
-                # Ha a 'clean' túl durva (mert mindent töröl), akkor helyette:
-                # "detail disk" paranccsal megkereshetjük a védett partíciókat, 
-                # de a 'clean' a legbiztosabb módszer szerviznél.
+                    $dpCmd | diskpart | Out-Null
 
-                $id | Out-File -FilePath $LogFile -Append -Encoding UTF8
-                Write-Host "✅ Disk $id attribútumai törölve és 'Clean' parancs kiadva." -ForegroundColor Green
-                Write-Host "⚠️ Figyelem: Ha a 'Clean' lefutott, a lemez most 'Unallocated' (formázatlan)!" -ForegroundColor Yellow
-                Start-Sleep -Seconds 2
+                    $id | Out-File -FilePath $LogFile -Append -Encoding UTF8
+                    Write-Host "✅ Disk $id attribútumai törölve és a partíciós tábla törölve (Clean)." -ForegroundColor Green
+                    Write-Host "⚠️ A lemez most teljesen üres, inicializálni kell a Lemezkezelőben!" -ForegroundColor Yellow
+                } else {
+                    Write-Host "❌ Érvénytelen lemezszám!" -ForegroundColor Red
+                }
+                Start-Sleep -Seconds 3
             }
         }
-
         "2" {
             if (Test-Path $LogFile) {
                 $ids = Get-Content $LogFile | Select-Object -Unique
