@@ -1,5 +1,3 @@
-# Innen a Script elejére
-
 # --- Ébren tartás és Laptop figyelmeztetés ---
 Write-Host "![FIGYELEM] Hosszu folyamat kovetkezik!" -ForegroundColor Yellow
 Write-Host "Kerlek, ha Laptopot hasznalsz, csatlakoztasd a TOLTOT!" -ForegroundColor Cyan
