@@ -6,20 +6,15 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
 # --- Ébren tartás és Laptop figyelmeztetés ---
-Write-Host "![FIGYELEM] Hosszú folyamat következik!" -ForegroundColor Yellow
-Write-Host "Kérlek, ha Laptopot használsz, csatlakoztasd a TÖLTŐT!" -ForegroundColor Cyan
+Write-Host "![FIGYELEM] Hosszu folyamat kovetkezik! Hasznalj TOLTOT!" -ForegroundColor Yellow
+Write-Host "[*] Automatikus elalvas felfuggesztve..." -ForegroundColor Gray
 
-# Megakadályozzuk az elalvást a folyamat alatt
-$pos = [Console]::CursorPosition
-Write-Host "[*] Automatikus elalvás felfüggesztve a szkript futása alatt..." -ForegroundColor Gray
+# API betöltése (dinamikus névvel, hogy ne legyen ütközés)
+$sig = '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint esFlags);'
+$type = Add-Type -MemberDefinition $sig -Name "Sleep$(Get-Random)" -Namespace "Win32" -PassThru
 
-# Beállítjuk a folyamatos ébrenlétet (ES_SYSTEM_REQUIRED | ES_CONTINUOUS)
-$signature = @'
-[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-public static extern uint SetThreadExecutionState(uint esFlags);
-'@
-$type = Add-Type -MemberDefinition $signature -Name "Win32SleepPrevention" -Namespace "Win32" -PassThru
-$type::SetThreadExecutionState(0x80000001) # ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+# Futás alatt: Ébren tartás kényszerítése
+$type::SetThreadExecutionState([uint32]0x80000001) 
 
 
 #Requires -RunAsAdministrator
@@ -180,5 +175,5 @@ Write-Host ""
 
 
 # Alváskezelés visszaállítása alaphelyzetbe
-$type::SetThreadExecutionState(0x80000000) 
+$type::SetThreadExecutionState([uint32]0x80000000)
 Write-Host "Kesz. Az energiagazdalkodasi korlatok feloldva." -ForegroundColor Gray
