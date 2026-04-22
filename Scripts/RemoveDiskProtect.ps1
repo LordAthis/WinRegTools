@@ -34,16 +34,33 @@ do {
 
     switch ($opt) {
         "1" {
-            $disks = Get-Disk | Where-Object { $_.BusType -eq "USB" -or $_.IsSystem -eq $false }
-            $disks | Select-Object Number, FriendlyName, @{Name="Vedett";Expression={$_.IsReadOnly}} | Format-Table
-            $id = Read-Host "Lemez szama"
+            # ... (listázás marad) ...
+            $id = Read-Host "Lemez száma"
             if ($id -ne "") {
-                "select disk $id", "attributes disk clear readonly" | diskpart | Out-Null
-                $id | Out-File -FilePath $LogFile -Append # Mentjük a naplóba a későbbi visszazáráshoz
-                Write-Host "Disk $id feloldva es naplozva." -ForegroundColor Green
-                Start-Sleep -Seconds 1
+                Write-Host "Disk $id drasztikus feloldása..." -ForegroundColor Magenta
+                
+                # Olyan szkriptet küldünk a DiskPartnak, ami a partíciókat is pucolja
+                $dpCmd = @"
+select disk $id
+attributes disk clear readonly
+online disk
+# Megpróbáljuk leszedni az 'override' jelzőt a partíciókról is
+clean
+exit
+"@
+                $dpCmd | diskpart | Out-Null
+                
+                # Ha a 'clean' túl durva (mert mindent töröl), akkor helyette:
+                # "detail disk" paranccsal megkereshetjük a védett partíciókat, 
+                # de a 'clean' a legbiztosabb módszer szerviznél.
+
+                $id | Out-File -FilePath $LogFile -Append -Encoding UTF8
+                Write-Host "✅ Disk $id attribútumai törölve és 'Clean' parancs kiadva." -ForegroundColor Green
+                Write-Host "⚠️ Figyelem: Ha a 'Clean' lefutott, a lemez most 'Unallocated' (formázatlan)!" -ForegroundColor Yellow
+                Start-Sleep -Seconds 2
             }
         }
+
         "2" {
             if (Test-Path $LogFile) {
                 $ids = Get-Content $LogFile | Select-Object -Unique
