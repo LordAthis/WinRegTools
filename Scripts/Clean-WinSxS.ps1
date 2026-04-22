@@ -5,6 +5,22 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 # Ez a trükk: megmondjuk a PowerShellnek, hogy minden scriptet UTF8-ként olvasson be a lemezről
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
+# --- Ébren tartás és Laptop figyelmeztetés ---
+Write-Host "![FIGYELEM] Hosszú folyamat következik!" -ForegroundColor Yellow
+Write-Host "Kérlek, ha Laptopot használsz, csatlakoztasd a TÖLTŐT!" -ForegroundColor Cyan
+
+# Megakadályozzuk az elalvást a folyamat alatt
+$pos = [Console]::CursorPosition
+Write-Host "[*] Automatikus elalvás felfüggesztve a szkript futása alatt..." -ForegroundColor Gray
+
+# Beállítjuk a folyamatos ébrenlétet (ES_SYSTEM_REQUIRED | ES_CONTINUOUS)
+$signature = @'
+[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+public static extern uint SetThreadExecutionState(uint esFlags);
+'@
+$type = Add-Type -MemberDefinition $signature -Name "Win32SleepPrevention" -Namespace "Win32" -PassThru
+$type::SetThreadExecutionState(0x80000001) # ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+
 
 #Requires -RunAsAdministrator
 <#
@@ -161,3 +177,8 @@ Write-Host "================================================" -ForegroundColor D
 Write-Host "  KESZ! WinSxS takaritas befejezve." -ForegroundColor Green
 Write-Host "================================================" -ForegroundColor DarkCyan
 Write-Host ""
+
+
+# Alváskezelés visszaállítása alaphelyzetbe
+$type::SetThreadExecutionState(0x80000000) 
+Write-Host "Kesz. Az energiagazdalkodasi korlatok feloldva." -ForegroundColor Gray
