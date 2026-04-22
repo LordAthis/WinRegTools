@@ -1,60 +1,58 @@
 # KB_Aktualizer.ps1
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# 1. OS verzió azonosítása a megfelelő JSON kiválasztásához
-$osName = switch -Regex ([System.Environment]::OSVersion.Version.ToString()) {
-    "^10\.0\.22" { "W11" }
-    "^10\.0\.19" { "W10" }
-    "^6\.3"      { "W81" }
-    "^6\.1"      { "W7" }
-    default      { "Unknown" }
+# 1. OS beazonosítása a fájlnévhez és a JSON kulcshoz
+$osVersion = [System.Environment]::OSVersion.Version
+$osKey = ""
+$fileNamePart = ""
+
+if ($osVersion.Major -eq 10) {
+    if ($osVersion.Build -ge 22000) { $osKey = "Windows_11"; $fileNamePart = "W11" }
+    else { $osKey = "Windows_10"; $fileNamePart = "W10" }
+}
+elseif ($osVersion.Major -eq 6) {
+    if ($osVersion.Minor -eq 1) { $osKey = "Windows_7"; $fileNamePart = "W7" }
+    elseif ($osVersion.Minor -eq 3) { $osKey = "Windows_81"; $fileNamePart = "W81" }
 }
 
-$JsonFile = Join-Path $PSScriptRoot "..\data\kb_lists$osName.json"
+$JsonFile = Join-Path $PSScriptRoot "..\data\KB_Lists$fileNamePart.json"
 
 if (-not (Test-Path $JsonFile)) {
-    Write-Host "[!!] Nem található a referencia lista: $JsonFile" -ForegroundColor Red
+    Write-Host "[!!] Hiányzó fájl: $JsonFile" -ForegroundColor Red
     return
 }
 
-# 2. JSON beolvasása
+# 2. JSON beolvasása és a konkrét OS szekció kinyerése
 try {
-    $KBData = Get-Content $JsonFile -Raw | ConvertFrom-Json
+    $RawData = Get-Content $JsonFile -Raw | ConvertFrom-Json
+    $KBData = $RawData.$osKey  # Itt dinamikusan hivatkozunk pl. a "Windows_10" kulcsra
 } catch {
-    Write-Host "[!!] Hiba a JSON beolvasása közben!" -ForegroundColor Red
+    Write-Host "[!!] Hiba a JSON feldolgozásakor!" -ForegroundColor Red
     return
 }
 
-Write-Host "--- KB Szinkronizáció ($osName) ---" -ForegroundColor Cyan
+Write-Host "--- KB Szinkronizáció ($osKey) ---" -ForegroundColor Cyan
 
-# 3. Telepített frissítések lekérdezése a gépben
+# 3. Telepített KB-k listája
 $InstalledKBs = Get-HotFix | Select-Object -ExpandProperty HotFixID
 
-# 4. KÁROS (harmful) frissítések eltávolítása
+# 4. KÁROS (harmful) frissítések takarítása
 foreach ($item in $KBData.harmful) {
-    $kb = $item.kb
-    if ($InstalledKBs -contains $kb) {
-        Write-Host "[!] Káros frissítés találva: $kb ($($item.desc))" -ForegroundColor Red
-        Write-Host "  Eltávolítás: $($item.reason)" -ForegroundColor Gray
-        
-        # WUSA hívás az eltávolításhoz
-        $kbNum = $kb.Replace("KB","")
-        $proc = Start-Process wusa.exe -ArgumentList "/uninstall /kb:$kbNum /quiet /norestart" -Wait -PassThru
-        
-        if ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010) {
-            Write-Host "  [OK] Sikeresen elküldve az eltávolító." -ForegroundColor Green
-        }
+    if ($InstalledKBs -contains $item.kb) {
+        Write-Host "[!] Eltávolítás: $($item.kb) - $($item.desc)" -ForegroundColor Red
+        $kbNum = $item.kb.Replace("KB","")
+        # Automata eltávolítás
+        Start-Process wusa.exe -ArgumentList "/uninstall /kb:$kbNum /quiet /norestart" -Wait
+        Write-Host "    Kész." -ForegroundColor Gray
     }
 }
 
-# 5. KÖTELEZŐ (required) frissítések ellenőrzése és pótlása
+# 5. KÖTELEZŐ (required) frissítések ellenőrzése
 foreach ($item in $KBData.required) {
-    $kb = $item.kb
-    if ($InstalledKBs -notcontains $kb) {
-        Write-Host "[+] Hiányzó kötelező frissítés: $kb" -ForegroundColor Yellow
-        # Itt jöhet a telepítési logika (pl. ha van .msu fájl a /data/updates mappában)
-        # Add-WindowsPackage -Online -PackagePath "..\data\updates\$kb.msu"
+    if ($InstalledKBs -notcontains $item.kb) {
+        Write-Host "[+] Hiányzó kötelező: $($item.kb)" -ForegroundColor Yellow
+        # Ide jöhet a telepítő parancsod
     }
 }
 
-Write-Host "Kész." -ForegroundColor Cyan
+Write-Host "Művelet véget ért." -ForegroundColor Cyan
