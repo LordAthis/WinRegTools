@@ -88,7 +88,6 @@ do {
             Run-Script "LongPaths_On_Off.ps1"
             Run-Script "SwapDeleteToShutdown.ps1"
             Run-Script "RPCHelper_Fix.ps1"
-            Run-Script "Clean-UpdateCache.ps1"
             Run-Script "RestorePoint_24HourLimitRelease.ps1"
             Run-Script "Clean-UpdateCache.ps1"
             Run-Script "Clean-WinSxS.ps1"
