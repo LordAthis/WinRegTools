@@ -32,12 +32,12 @@ function Show-Menu {
     Write-Host "   WinRegTools - LordAthis             " -ForegroundColor Cyan
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host " 0  Mind - Az osszes pont sorban" -ForegroundColor Yellow
-    Write-Host " A  AJANLOTT (Nepszeru) beallitasok inditasa"-ForegroundColor Green
-    Write-Host " 1  Hosszu nevek (LongPaths)"
-    Write-Host " 2  Lapozofajl urites (SwapDelete)"
+    Write-Host " A  AJANLOTT [Nepszeru] beallitasok inditasa"-ForegroundColor Green
+    Write-Host " 1  Hosszu nevek [LongPaths]"
+    Write-Host " 2  Lapozofajl urites [SwapDelete]"
     Write-Host " 3  RPC Hiba javitasa"
     Write-Host " 3A  RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve" -ForegroundColor Magenta
-    Write-Host " 4  A Windows Update Cache torlese (Lemezterulet felszabaditasa) - Az 5-os pont futtatása esetén felesleges!" -ForegroundColor Magenta
+    Write-Host " 4  A Windows Update Cache torlese [Felesleges az 5-os mellett]" -ForegroundColor Magenta
     Write-Host " 5  WinSxS takaritas es Rendszerjavitas"
     Write-Host " 6  Bing Keresések Letiltasa"
     Write-Host " 7  Indexeles Letiltasa"
@@ -46,8 +46,8 @@ function Show-Menu {
     Write-Host " 10  KB Checker - Frissitesek elemzese"
     Write-Host " 11  KB Checker - Aktualizalasa"
     Write-Host " 15  A talcarol eltunteti az idojarast/hireket"
-    Write-Host " 16  Gyorsitja az Intezot: fajlkiterjesztesek mutatasa, (Ez a gep) az alapertelmezett a Gyorseleres helyett"
-    Write-Host " 17  Letiltja az automatikusan telepulo (Candy Crush) es egyeb szemeteket"
+    Write-Host " 16  Gyorsitja az Intezot: fajlkiterjesztesek mutatasa, 'Ez a gep' az alapertelmezett a Gyorseleres helyett"
+    Write-Host " 17  Letiltja az automatikusan telepulo [Candy Crush] es egyeb szemeteket"
     Write-Host " 18  MEGHAJTO IRASVEDELEM KEZELO - Felold es Zarol"
     Write-Host " 19  OneDrive eltavolitasa a rendszerbol"
     Write-Host " 20  "
