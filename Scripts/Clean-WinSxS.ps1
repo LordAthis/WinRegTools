@@ -60,6 +60,19 @@ try {
     Write-Host "  Méret lekérdezés sikertelen (ez normális, ha a WinSxS védett)" -ForegroundColor DarkGray
 }
 
+# ─── 0. DISM: Rendszerfájlok javítása (Health Check & Restore) ───────────────
+Write-Host ""
+Write-Host "[0] DISM - Rendszerfájlok épségének ellenőrzése és javítása..." -ForegroundColor Yellow
+
+# Ellenőrizzük, hogy van-e sérülés
+dism /Online /Cleanup-Image /ScanHealth
+
+# Ha a ScanHealth hibát talál, vagy biztosra akarunk menni, futtatjuk a javítást
+Write-Host "  [*] Mély javítás és rendszerelemek helyreállítása folyamatban..." -ForegroundColor Gray
+dism /Online /Cleanup-Image /RestoreHealth
+
+
+
 # ─── 1. DISM: Komponenstár elemzés ───────────────────────────────────────────
 Write-Host ""
 Write-Host "[1] DISM - Component Store elemzés..." -ForegroundColor Yellow
