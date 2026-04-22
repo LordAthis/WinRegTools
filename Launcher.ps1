@@ -44,8 +44,9 @@ function Show-Menu {
     Write-Host " 9  Telemetria Letiltasa"
     Write-Host " 10  KB Checker - Frissitesek elemzese"
     Write-Host " 11  KB Checker - Aktualizálása"
-    Write-Host " 12  Visszaallitasi pont letrehozasa"
+    Write-Host " 12  Log-takarítás (30 napnál régebbi logok törlése)"
     Write-Host " 13  Napi több 'Visszaallitasi pont' engedélyezése"
+    Write-Host " 14  Visszaallitasi pont letrehozasa"
     Write-Host " X  Kilepes" -ForegroundColor Red
     Write-Host "----------------------------------------"
 }
@@ -79,7 +80,24 @@ function Run-Script ([string]$FileName) {
 Clear-Host
 
 do {
-    Show-Menu
+    # Gyors állapotjelentés a menü felett
+    Write-Host "--- AKTUALIS RENDSZERALLAPOT ---" -ForegroundColor DarkCyan
+    
+    # RPC Ellenőrzés
+    $rpc = Get-Service RpcSs -ErrorAction SilentlyContinue
+    Write-Host "  RPC Szolgáltatás : " -NoNewline; Write-Host $rpc.Status -ForegroundColor (if ($rpc.Status -eq 'Running') { "Green" } else { "Red" })
+
+    # RP Limit Ellenőrzés
+    $rpFreq = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "SystemRestorePointCreationFrequency" -ErrorAction SilentlyContinue
+    $rpLimit = if ($rpFreq.SystemRestorePointCreationFrequency -eq 0) { "FELOLDVA (0)" } else { "KORLÁTOZVA" }
+    Write-Host "  RP Időkorlát    : " -NoNewline; Write-Host $rpLimit -ForegroundColor (if ($rpLimit -match "0") { "Green" } else { "Yellow" })
+
+    # KB Log dátum
+    $lastKB = Get-ChildItem -Path $LogFolder -Filter "*KB_Checker.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    $kbDate = if ($lastKB) { $lastKB.LastWriteTime.ToString("yyyy-MM-dd HH:mm") } else { "Nincs log" }
+    Write-Host "  Utolsó KB-check : " -NoNewline; Write-Host $kbDate -ForegroundColor Cyan
+
+    Show-Menu # Ez írja ki a listát
     $choice = Read-Host "Valassz opciót (0-10 / X)"
 
     switch ($choice.ToUpper()) {
@@ -97,6 +115,7 @@ do {
             Run-Script "Disable-Telemetry.ps1"
             Run-Script "KB_Checker.ps1"
             Run-Script "KB_Aktualizer.ps1"
+            Run-Script "Clean-Logs.ps1"
             Run-Script "Create-RestorePoint.ps1"
         }
         "1"  { Run-Script "LongPaths_On_Off.ps1" }
@@ -111,8 +130,9 @@ do {
         "9"  { Run-Script "Disable-Telemetry.ps1" }
         "10"  { Run-Script "KB_Checker.ps1" }
         "11"  { Run-Script "KB_Aktualizer.ps1" }
-        "12" { Run-Script "Create-RestorePoint.ps1" }
+        "12" { Run-Script "Clean-Logs.ps1" }
         "13" { Run-Script "RestorePoint_24HourLimitRelease.ps1" }
+        "14" { Run-Script "Create-RestorePoint.ps1" }
         "X"  {
             Write-SessionLog "Kilepes"
             Write-Host "Viszlat!" -ForegroundColor Cyan
