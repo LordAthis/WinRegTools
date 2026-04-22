@@ -1,58 +1,60 @@
 # KB_Aktualizer.ps1
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# 1. Beállítások és Lista (Ezt bővítsd a saját KB számaiddal)
-$KBMasterList = @{
-    "KB5034765" = "Lényeges";
-    "KB5034441" = "Veszélyes/Hibás"; # Példa: ha fent van, töröljük
-    "KB5001716" = "Lényeges"
+# 1. OS verzió azonosítása a megfelelő JSON kiválasztásához
+$osName = switch -Regex ([System.Environment]::OSVersion.Version.ToString()) {
+    "^10\.0\.22" { "W11" }
+    "^10\.0\.19" { "W10" }
+    "^6\.3"      { "W81" }
+    "^6\.1"      { "W7" }
+    default      { "Unknown" }
 }
 
-$StateFile = Join-Path $PSScriptRoot "..\LOG\Aktualizer_State.txt"
+$JsonFile = Join-Path $PSScriptRoot "..\data\kb_lists$osName.json"
 
-Write-Host "--- KB Aktualizáló (Szinkronizáció) ---" -ForegroundColor Cyan
+if (-not (Test-Path $JsonFile)) {
+    Write-Host "[!!] Nem található a referencia lista: $JsonFile" -ForegroundColor Red
+    return
+}
 
-# 2. Telepített frissítések lekérése
-Write-Host "[*] Telepített frissítések ellenőrzése..." -ForegroundColor Yellow
+# 2. JSON beolvasása
+try {
+    $KBData = Get-Content $JsonFile -Raw | ConvertFrom-Json
+} catch {
+    Write-Host "[!!] Hiba a JSON beolvasása közben!" -ForegroundColor Red
+    return
+}
+
+Write-Host "--- KB Szinkronizáció ($osName) ---" -ForegroundColor Cyan
+
+# 3. Telepített frissítések lekérdezése a gépben
 $InstalledKBs = Get-HotFix | Select-Object -ExpandProperty HotFixID
 
-# 3. Törlendő (Veszélyes/Hibás) frissítések kezelése
-foreach ($kb in $KBMasterList.Keys) {
-    if ($KBMasterList[$kb] -eq "Veszélyes/Hibás" -and $InstalledKBs -contains $kb) {
-        Write-Host "[!] Törlendő frissítés találva: $kb" -ForegroundColor Red
-        Write-Host "  Eltávolítás folyamatban..." -NoNewline
-        # Csendes eltávolítás
-        $process = Start-Process wusa.exe -ArgumentList "/uninstall /kb:$($kb.Replace('KB','')) /quiet /norestart" -Wait -PassThru
-        if ($process.ExitCode -eq 0 -or $process.ExitCode -eq 3010) {
-            Write-Host " KÉSZ (Reboot szükséges lehet)." -ForegroundColor Green
+# 4. KÁROS (harmful) frissítések eltávolítása
+foreach ($item in $KBData.harmful) {
+    $kb = $item.kb
+    if ($InstalledKBs -contains $kb) {
+        Write-Host "[!] Káros frissítés találva: $kb ($($item.desc))" -ForegroundColor Red
+        Write-Host "  Eltávolítás: $($item.reason)" -ForegroundColor Gray
+        
+        # WUSA hívás az eltávolításhoz
+        $kbNum = $kb.Replace("KB","")
+        $proc = Start-Process wusa.exe -ArgumentList "/uninstall /kb:$kbNum /quiet /norestart" -Wait -PassThru
+        
+        if ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010) {
+            Write-Host "  [OK] Sikeresen elküldve az eltávolító." -ForegroundColor Green
         }
     }
 }
 
-# 4. Hiányzó (Lényeges) frissítések kezelése
-foreach ($kb in $KBMasterList.Keys) {
-    if ($KBMasterList[$kb] -eq "Lényeges" -and $InstalledKBs -notcontains $kb) {
-        Write-Host "[+] Hiányzó kritikus frissítés: $kb" -ForegroundColor Yellow
-        Write-Host "  Letöltés és telepítés indítása (Windows Update API)..." -ForegroundColor Gray
-        
-        # Itt megjegyzés: A WUSA-hoz kellene az .msu fájl elérése, 
-        # vagy a PSWindowsUpdate modullal tölthető le automatikusan.
-        # Példa: Install-WindowsUpdate -KBArticleID $kb -AcceptAll -AutoReboot
+# 5. KÖTELEZŐ (required) frissítések ellenőrzése és pótlása
+foreach ($item in $KBData.required) {
+    $kb = $item.kb
+    if ($InstalledKBs -notcontains $kb) {
+        Write-Host "[+] Hiányzó kötelező frissítés: $kb" -ForegroundColor Yellow
+        # Itt jöhet a telepítési logika (pl. ha van .msu fájl a /data/updates mappában)
+        # Add-WindowsPackage -Online -PackagePath "..\data\updates\$kb.msu"
     }
 }
 
-# 5. Újraindítás kezelése
-$rebootPending = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending"
-if ($rebootPending) {
-    Write-Host ""
-    Write-Host "====================================================" -ForegroundColor Red
-    Write-Host "  A rendszer újraindítást igényel a folytatáshoz!"
-    Write-Host "====================================================" -ForegroundColor Red
-    
-    $ans = Read-Host "Újraindítja most? (I/N)"
-    if ($ans -eq 'I') {
-        Restart-Computer -Force
-    }
-} else {
-    Write-Host "Minden frissítés szinkronban." -ForegroundColor Green
-}
+Write-Host "Kész." -ForegroundColor Cyan
