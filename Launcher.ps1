@@ -37,7 +37,7 @@ function Show-Menu {
     Write-Host " 3  RPC Hiba javitasa"
     Write-Host " 3a  RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve" -ForegroundColor Magenta
     Write-Host " 4  A Windows Update Cache torlese (Lemezterulet felszabaditasa) - Az 5-os pont futtatása esetén felesleges, abban ismétlődik!" -ForegroundColor Magenta
-    Write-Host " 5  WinSxS takaritas"
+    Write-Host " 5  WinSxS takaritas es Rendszerjavitas"
     Write-Host " 6  Bing Keresések Letiltasa"
     Write-Host " 7  Indexeles Letiltasa"
     Write-Host " 8  Bing Start Menubol kitiltasa"
