@@ -1,0 +1,18 @@
+{
+  "_comment": "RTS Framework - KB Enabled/Disabled List",
+  "_version": "1.0",
+  "_author": "LordAthis",
+  "_last_updated": "2025-04",
+  "_note": "required=kötelező biztonsági frissítés | harmful=eltávolítandó | recommended=ajánlott | optional=opcionális",
+
+  "Windows_98": {
+    "_build": "4.10",
+    "_support_ended": "2006-07-11",
+    "_ps_available": false,
+    "_script_type": "bat",
+    "required": [],
+    "harmful": [],
+    "recommended": [],
+    "notes": "Windows 98 esetén KB rendszer nem létezett. Windows Update szerver már nem elérhető. Offline patch-ek: 98SE2ME, unofficial SP."
+  }
+}
