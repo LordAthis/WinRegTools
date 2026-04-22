@@ -32,6 +32,7 @@ function Show-Menu {
     Write-Host "   WinRegTools - LordAthis             " -ForegroundColor Cyan
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host " 0  Mind - Az osszes pont sorban" -ForegroundColor Yellow
+    Write-Host " A  AJANLOTT (Nepszeru) beallitasok inditasa"-ForegroundColor Green
     Write-Host " 1  Hosszu nevek (LongPaths)"
     Write-Host " 2  Lapozofajl urites (SwapDelete)"
     Write-Host " 3  RPC Hiba javitasa"
@@ -44,7 +45,14 @@ function Show-Menu {
     Write-Host " 9  Telemetria Letiltasa"
     Write-Host " 10  KB Checker - Frissitesek elemzese"
     Write-Host " 11  KB Checker - Aktualizalasa"
-    Write-Host " 12  Log-takarítás (30 napnal regebbi logok torlese)"
+    Write-Host " 15  A talcarol eltunteti az idojarast/hireket"
+    Write-Host " 16  Gyorsitja az Intezot: fajlkiterjesztesek mutatasa, 'Ez a gep' az alapertelmezett a Gyorseleres helyett"
+    Write-Host " 17  Letiltja az automatikusan telepulo 'Candy Crush' es egyeb szemeteket"
+    Write-Host " 18  "
+    Write-Host " 19  "
+    Write-Host " 20  "
+    Write-Host " 21  "
+    Write-Host " 12  Log-takaritas (30 napnal regebbi logok torlese)"
     Write-Host " 13  Napi tobb 'Visszaallitasi pont' engedelyezese"
     Write-Host " 14  Visszaallitasi pont letrehozasa"
     Write-Host " X  Kilepes" -ForegroundColor Red
@@ -118,6 +126,24 @@ do {
             Run-Script "Clean-Logs.ps1"
             Run-Script "Create-RestorePoint.ps1"
         }
+        "A" {
+            Write-SessionLog "AJANLOTT (Nepszeru) beallitasok inditasa"
+            # 1. Előkészítés
+            Run-Script "RestorePoint_24HourLimitRelease.ps1"
+            # 2. Optimalizálás
+            Run-Script "LongPaths_On_Off.ps1"
+            Run-Script "Disable-BingSearch.ps1"
+            Run-Script "Disable-Telemetry.ps1"
+            Run-Script "Optimize-Explorer.ps1"
+            Run-Script "Disable-ConsumerFeatures.ps1"
+            # 3. Tisztítás
+            Run-Script "Clean-UpdateCache.ps1"
+            Run-Script "Clean-WinSxS.ps1"
+            # 4. Biztonság
+            Run-Script "Create-RestorePoint.ps1"
+            Write-Host "`n[KESZ] Az ajanlott beallitasok lefutottak!" -ForegroundColor Green
+            Start-Sleep -Seconds 5
+        }
         "1"  { Run-Script "LongPaths_On_Off.ps1" }
         "2"  { Run-Script "SwapDeleteToShutdown.ps1" }
         "3"  { Run-Script "RPCHelper_Fix.ps1" }
@@ -133,6 +159,15 @@ do {
         "12" { Run-Script "Clean-Logs.ps1" }
         "13" { Run-Script "RestorePoint_24HourLimitRelease.ps1" }
         "14" { Run-Script "Create-RestorePoint.ps1" }
+        "15" { Run-Script "Disable-Widgets-News.ps1" }
+        "16" { Run-Script "Optimize-Explorer.ps1" }
+        "17" { Run-Script "Disable-ConsumerFeatures.ps1" }
+        "18" { Run-Script "" }
+        "19" { Run-Script "" }
+        "20" { Run-Script "" }
+        "21" { Run-Script "" }
+        "22" { Run-Script "" }
+        "23" { Run-Script "" }
         "X"  {
             Write-SessionLog "Kilepes"
             Write-Host "Viszlat!" -ForegroundColor Cyan
