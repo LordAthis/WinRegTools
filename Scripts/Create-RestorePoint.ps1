@@ -1,18 +1,12 @@
 # --- Ébren tartás és Laptop figyelmeztetés ---
-Write-Host "![FIGYELEM] Hosszu folyamat kovetkezik!" -ForegroundColor Yellow
-Write-Host "Kerlek, ha Laptopot hasznalsz, csatlakoztasd a TOLTOT!" -ForegroundColor Cyan
-
-# Megakadályozzuk az elalvást a folyamat alatt
-$pos = [Console]::CursorPosition
-Write-Host "[*] Automatikus elalvas felfuggesztve a szkript futasa alatt..." -ForegroundColor Gray
-
-# Beállítjuk a folyamatos ébrenlétet (ES_SYSTEM_REQUIRED | ES_CONTINUOUS)
-$signature = @'
-[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-public static extern uint SetThreadExecutionState(uint esFlags);
-'@
-$type = Add-Type -MemberDefinition $signature -Name "Win32SleepPrevention" -Namespace "Win32" -PassThru
-$type::SetThreadExecutionState(0x80000001) # ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+# API betöltése (dinamikus névvel, hogy ne legyen ütközés)
+# Futás alatt: Ébren tartás kényszerítése
+$sig = '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint esFlags);'
+$type = Add-Type -MemberDefinition $sig -Name "Sleep$(Get-Random)" -Namespace "Win32" -PassThru
+# Decimális érték használata a konverziós hiba elkerülésére (0x80000001 = 2147483649)
+[uint32]$flags = 2147483649
+$type::SetThreadExecutionState($flags)
+# --- Ébren tartás és Laptop figyelmeztetés ---
 
 
 #Requires -RunAsAdministrator
@@ -162,6 +156,6 @@ if ($created) {
 Write-Host ""
 
 
-# Alváskezelés visszaállítása alaphelyzetbe
-$type::SetThreadExecutionState(0x80000000) 
-Write-Host "Kész. Az energiagazdálkodási korlátok feloldva." -ForegroundColor Gray
+# Alváskezelés visszaállítása alaphelyzetbe (0x80000000 = 2147483648)
+[uint32]$reset = 2147483648
+$type::SetThreadExecutionState($reset)
