@@ -1,0 +1,18 @@
+{
+  "_comment": "RTS Framework - KB Enabled/Disabled List",
+  "_version": "1.0",
+  "_author": "LordAthis",
+  "_last_updated": "2025-04",
+  "_note": "required=kötelező biztonsági frissítés | harmful=eltávolítandó | recommended=ajánlott | optional=opcionális",
+
+  "Windows_95": {
+    "_build": "4.00",
+    "_support_ended": "2001-12-31",
+    "_ps_available": false,
+    "_script_type": "bat",
+    "required": [],
+    "harmful": [],
+    "recommended": [],
+    "notes": "Windows 95 esetén KB rendszer nem létezett. Patch-ek .exe formában érhetők el. Online frissítés már nem elérhető."
+  }
+}
