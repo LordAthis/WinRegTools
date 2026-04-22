@@ -1,13 +1,12 @@
 # --- Ébren tartás és Laptop figyelmeztetés ---
-Write-Host "![FIGYELEM] Hosszu folyamat kovetkezik! Hasznalj TOLTOT!" -ForegroundColor Yellow
-Write-Host "[*] Automatikus elalvas felfuggesztve..." -ForegroundColor Gray
-
 # API betöltése (dinamikus névvel, hogy ne legyen ütközés)
+# Futás alatt: Ébren tartás kényszerítése
 $sig = '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint esFlags);'
 $type = Add-Type -MemberDefinition $sig -Name "Sleep$(Get-Random)" -Namespace "Win32" -PassThru
-
-# Futás alatt: Ébren tartás kényszerítése
-$type::SetThreadExecutionState([uint32]0x80000001) 
+# Decimális érték használata a konverziós hiba elkerülésére (0x80000001 = 2147483649)
+[uint32]$flags = 2147483649
+$type::SetThreadExecutionState($flags)
+# --- Ébren tartás és Laptop figyelmeztetés ---
 
 
 Write-Host "--- Fajlkezelo optimalizalasa ---" -ForegroundColor Cyan
@@ -18,6 +17,6 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer
 Write-Host "Kesz." -ForegroundColor Green
 
 
-# Alváskezelés visszaállítása alaphelyzetbe
-$type::SetThreadExecutionState([uint32]0x80000000)
-Write-Host "Kesz. Az energiagazdalkodasi korlatok feloldva." -ForegroundColor Gray
+# Alváskezelés visszaállítása alaphelyzetbe (0x80000000 = 2147483648)
+[uint32]$reset = 2147483648
+$type::SetThreadExecutionState($reset)
