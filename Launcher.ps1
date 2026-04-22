@@ -88,25 +88,36 @@ function Run-Script ([string]$FileName) {
 Clear-Host
 
 do {
-    # Gyors állapotjelentés a menü felett
+    # --- AKTUALIS RENDSZERALLAPOT (Javított) ---
     Write-Host "--- AKTUALIS RENDSZERALLAPOT ---" -ForegroundColor DarkCyan
     
-    # RPC Ellenőrzés
+    # 1. RPC Ellenőrzés
     $rpc = Get-Service RpcSs -ErrorAction SilentlyContinue
-    Write-Host "  RPC Szolgáltatás : " -NoNewline; Write-Host $rpc.Status -ForegroundColor (if ($rpc.Status -eq 'Running') { "Green" } else { "Red" })
+    $rpcStatusText = if ($rpc) { $rpc.Status } else { "Nem talalható" }
+    $rpcColor = if ($rpcStatusText -eq 'Running') { "Green" } else { "Red" }
+    Write-Host "  RPC Szolgaltatas : " -NoNewline; Write-Host $rpcStatusText -ForegroundColor $rpcColor
 
-    # RP Limit Ellenőrzés
+    # 2. RP Limit Ellenőrzés
     $rpFreq = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "SystemRestorePointCreationFrequency" -ErrorAction SilentlyContinue
-    $rpLimit = if ($rpFreq.SystemRestorePointCreationFrequency -eq 0) { "FELOLDVA (0)" } else { "KORLÁTOZVA" }
-    Write-Host "  RP Időkorlát    : " -NoNewline; Write-Host $rpLimit -ForegroundColor (if ($rpLimit -match "0") { "Green" } else { "Yellow" })
+    $rpLimitVal = $rpFreq.SystemRestorePointCreationFrequency
+    
+    $rpText = "KORLATOZVA"
+    $rpColor = "Yellow"
+    if ($null -ne $rpLimitVal -and $rpLimitVal -eq 0) {
+        $rpText = "FELOLDVA (0)"
+        $rpColor = "Green"
+    }
+    Write-Host "  RP Idokorlat    : " -NoNewline; Write-Host $rpText -ForegroundColor $rpColor
 
-    # KB Log dátum
+    # 3. KB Log dátum
     $lastKB = Get-ChildItem -Path $LogFolder -Filter "*KB_Checker.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     $kbDate = if ($lastKB) { $lastKB.LastWriteTime.ToString("yyyy-MM-dd HH:mm") } else { "Nincs log" }
-    Write-Host "  Utolsó KB-check : " -NoNewline; Write-Host $kbDate -ForegroundColor Cyan
+    Write-Host "  Utolso KB-check : " -NoNewline; Write-Host $kbDate -ForegroundColor Cyan
+    Write-Host ""
+
 
     Show-Menu # Ez írja ki a listát
-    $choice = Read-Host "Valassz opciót (0-10 / X)"
+    $choice = Read-Host "Valassz opciot (0-10 / X)"
 
     switch ($choice.ToUpper()) {
         "0" {
