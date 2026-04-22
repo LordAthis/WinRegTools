@@ -35,7 +35,7 @@ function Show-Menu {
     Write-Host " 1  Hosszu nevek (LongPaths)"
     Write-Host " 2  Lapozofajl urites (SwapDelete)"
     Write-Host " 3  RPC Hiba javitasa"
-    Write-Host " 3a  RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve" -ForegroundColor Magenta
+    Write-Host " 3A  RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve" -ForegroundColor Magenta
     Write-Host " 4  A Windows Update Cache torlese (Lemezterulet felszabaditasa) - Az 5-os pont futtatása esetén felesleges, abban ismétlődik!" -ForegroundColor Magenta
     Write-Host " 5  WinSxS takaritas es Rendszerjavitas"
     Write-Host " 6  Bing Keresések Letiltasa"
@@ -102,7 +102,7 @@ do {
         "1"  { Run-Script "LongPaths_On_Off.ps1" }
         "2"  { Run-Script "SwapDeleteToShutdown.ps1" }
         "3"  { Run-Script "RPCHelper_Fix.ps1" }
-        "3a"  { Run-Script "RPCHelper_Drastic_Fix.ps1" }
+        "3A"  { Run-Script "RPCHelper_Drastic_Fix.ps1" }
         "4"  { Run-Script "Clean-UpdateCache.ps1" }
         "5"  { Run-Script "Clean-WinSxS.ps1" }
         "6"  { Run-Script "Disable-BingSearch.ps1" }
