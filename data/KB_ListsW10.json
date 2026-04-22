@@ -19,14 +19,32 @@
     },
     "_script_type": "ps1_native",
     "required": [],
-    "harmful": [
-      {
-        "kb": "KB4524244",
-        "desc": "Problémás biztonsági frissítés (rendszer-indítási hibákat okozhat)",
-        "reason": "Microsoft visszavonta, boot problémákat okoz",
-        "action": "uninstall_and_hide"
-      }
-    ],
+"harmful": [
+  {
+    "kb": "KB4524244",
+    "desc": "Problémás biztonsági frissítés (rendszer-indítási hibákat okozhat)",
+    "reason": "Microsoft visszavonta, boot problémákat okoz",
+    "action": "uninstall_and_hide"
+  },
+{
+  "kb": "KB5034441",
+  "desc": "WinRE (0x80070643) hiba",
+  "reason": "Méretezési hiba miatt nem települ, folyamatos hibaüzenetet okoz",
+  "action": "uninstall_and_hide"
+},  
+  {
+    "kb": "KB5034441",
+    "desc": "WinRE frissítési hiba (0x80070643)",
+    "reason": "Gyakori telepítési hiba a túl kicsi helyreállítási partíció miatt",
+    "action": "uninstall_and_hide"
+  },
+  {
+    "kb": "KB3035583",
+    "desc": "Get Windows 10 (W7/8 esetén)",
+    "reason": "Erőszakos upgrade reklám",
+    "action": "uninstall_and_hide"
+  }
+],
     "recommended": [],
     "builtin_disable": [
       "BingSearch",
