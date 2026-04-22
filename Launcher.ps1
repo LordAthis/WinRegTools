@@ -36,16 +36,16 @@ function Show-Menu {
     Write-Host " 2  Lapozofajl urites (SwapDelete)"
     Write-Host " 3  RPC Hiba javitasa"
     Write-Host " 3A  RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve" -ForegroundColor Magenta
-    Write-Host " 4  A Windows Update Cache torlese (Lemezterulet felszabaditasa) - Az 5-os pont futtatása esetén felesleges, abban ismétlődik!" -ForegroundColor Magenta
+    Write-Host " 4  A Windows Update Cache torlese (Lemezterulet felszabaditasa) - Az 5-os pont futtatása esetén felesleges!" -ForegroundColor Magenta
     Write-Host " 5  WinSxS takaritas es Rendszerjavitas"
     Write-Host " 6  Bing Keresések Letiltasa"
     Write-Host " 7  Indexeles Letiltasa"
     Write-Host " 8  Bing Start Menubol kitiltasa"
     Write-Host " 9  Telemetria Letiltasa"
     Write-Host " 10  KB Checker - Frissitesek elemzese"
-    Write-Host " 11  KB Checker - Aktualizálása"
-    Write-Host " 12  Log-takarítás (30 napnál régebbi logok törlése)"
-    Write-Host " 13  Napi több 'Visszaallitasi pont' engedélyezése"
+    Write-Host " 11  KB Checker - Aktualizalasa"
+    Write-Host " 12  Log-takarítás (30 napnal regebbi logok torlese)"
+    Write-Host " 13  Napi tobb 'Visszaallitasi pont' engedelyezese"
     Write-Host " 14  Visszaallitasi pont letrehozasa"
     Write-Host " X  Kilepes" -ForegroundColor Red
     Write-Host "----------------------------------------"
@@ -56,18 +56,18 @@ function Run-Script ([string]$FileName) {
     $Path = Join-Path $ScriptFolder $FileName
     if (Test-Path $Path) {
         Write-Host ""
-        Write-Host ">>> Futtatás: $FileName" -ForegroundColor Magenta
-        Write-SessionLog "Indítás: $FileName"
+        Write-Host ">>> Futtatas: $FileName" -ForegroundColor Magenta
+        Write-SessionLog "Inditas: $FileName"
         try {
             & $Path
             Write-Host ">>> Befejezve: $FileName" -ForegroundColor Green
-            Write-SessionLog "Kész: $FileName"
+            Write-SessionLog "Kesz: $FileName"
         } catch {
             Write-Host ">>> HIBA ($FileName): $($_.Exception.Message)" -ForegroundColor Red
             Write-SessionLog "HIBA: $FileName | $($_.Exception.Message)"
         }
     } else {
-        Write-Host "  [!!] Fájl nem talalhato: $Path" -ForegroundColor Red
+        Write-Host "  [!!] Fajl nem talalhato: $Path" -ForegroundColor Red
         Write-SessionLog "Nem talalhato: $Path"
     }
     # Üzenetek maradnak, menü alájuk töltődik
@@ -102,7 +102,7 @@ do {
 
     switch ($choice.ToUpper()) {
         "0" {
-            Write-SessionLog "Mind futtatasa indul"
+            Write-SessionLog "Az osszes futtatasa indul"
             Run-Script "LongPaths_On_Off.ps1"
             Run-Script "SwapDeleteToShutdown.ps1"
             Run-Script "RPCHelper_Fix.ps1"
