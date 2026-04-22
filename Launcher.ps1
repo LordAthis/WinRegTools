@@ -48,7 +48,7 @@ function Show-Menu {
     Write-Host " 15  A talcarol eltunteti az idojarast/hireket"
     Write-Host " 16  Gyorsitja az Intezot: fajlkiterjesztesek mutatasa, 'Ez a gep' az alapertelmezett a Gyorseleres helyett"
     Write-Host " 17  Letiltja az automatikusan telepulo 'Candy Crush' es egyeb szemeteket"
-    Write-Host " 18  "
+    Write-Host " 18  MEGHAJTÓ ÍRÁSVÉDELEM KEZELŐ Felold es Zarol"
     Write-Host " 19  "
     Write-Host " 20  "
     Write-Host " 21  "
@@ -173,7 +173,7 @@ do {
         "15" { Run-Script "Disable-Widgets-News.ps1" }
         "16" { Run-Script "Optimize-Explorer.ps1" }
         "17" { Run-Script "Disable-ConsumerFeatures.ps1" }
-        "18" { Run-Script "" }
+        "18" { Run-Script "RemoveDiskProtect.ps1" }
         "19" { Run-Script "" }
         "20" { Run-Script "" }
         "21" { Run-Script "" }
