@@ -36,7 +36,7 @@ function Show-Menu {
     Write-Host " 2  Lapozofajl urites (SwapDelete)"
     Write-Host " 3  RPC Hiba javitasa"
     Write-Host " 3a  RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve"
-    Write-Host " 4  A Windows Update Cache törlése (Lemezterület felszabadítása)"
+    Write-Host " 4  A Windows Update Cache torlese (Lemezterulet felszabaditasa) - Az 5-os pont futtatása esetén felesleges, abban ismétlődik!"
     Write-Host " 5  WinSxS takaritas"
     Write-Host " 6  Bing Keresések Letiltasa"
     Write-Host " 7  Indexeles Letiltasa"
