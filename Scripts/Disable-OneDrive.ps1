@@ -1,11 +1,10 @@
 # Disable-OneDrive.ps1 - LordAthis RTS Framework
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# --- RTS Framework - Sleep Prevention ---
+# --- RTS Framework - Sleep Prevention (Stabil) ---
 $sig = '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint esFlags);'
 $type = Add-Type -MemberDefinition $sig -Name "Sleep$(Get-Random)" -Namespace "Win32" -PassThru
-[uint32]$flags = 2147483649
-$type::SetThreadExecutionState($flags) | Out-Null
+$type::SetThreadExecutionState([uint32]2147483649) | Out-Null
 
 Write-Host "--- ONEDRIVE ELTAVOLITASA ES LETILTASA ---" -ForegroundColor Cyan
 
@@ -14,7 +13,7 @@ Write-Host "[*] OneDrive folyamatok leallitasa..." -ForegroundColor Yellow
 Stop-Process -Name "OneDrive" -ErrorAction SilentlyContinue
 Start-Sleep -Seconds 2
 
-# 2. Uninstall futtatasa (Rendszergazdakent)
+# 2. Uninstall futtatasa
 Write-Host "[*] OneDrive eltavolitasa a rendszerbol..." -ForegroundColor Yellow
 $osType = [Environment]::Is64BitOperatingSystem
 $uninstallPath = if ($osType) { "$env:SystemRoot\SysWOW64\OneDriveSetup.exe" } else { "$env:SystemRoot\System32\OneDriveSetup.exe" }
@@ -23,33 +22,28 @@ if (Test-Path $uninstallPath) {
     Start-Process $uninstallPath -ArgumentList "/uninstall" -Wait
     Write-Host "  [OK] Uninstall folyamat lefutott." -ForegroundColor Green
 } else {
-    Write-Host "  [-] Uninstall fajl nem talalhato (mar torolve van?)." -ForegroundColor Gray
+    Write-Host "  [-] OneDriveSetup nem talalhato, mar torolve lehet." -ForegroundColor Gray
 }
 
-# 3. Registry maradvanyok es Intezo ikon eltavolitasa
-Write-Host "[*] Registry tisztitasa es Intezo ikon elre柔软etese..." -ForegroundColor Yellow
+# 3. Registry tiltas es Intezo ikon elrejtese
+Write-Host "[*] Registry tiltasok beallitasa..." -ForegroundColor Yellow
+
 # OneDrive tiltasa Policy szinten
 $policyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive"
 if (-not (Test-Path $policyPath)) { New-Item $policyPath -Force | Out-Null }
-Set-ItemProperty -Path $policyPath -Name "DisableFileSyncNGSC" -Value 1 -Type DWord
+Set-ItemProperty -Path $policyPath -Name "DisableFileSyncNGSC" -Value 1 -Type DWord -Force
 
-# Intezo ikon eltavolitasa (NameSpace)
+# Intezo ikon elrejtese (CLSID)
 $clsid = "{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
 $regPath = "HKCU:\Software\Classes\CLSID\$clsid"
 if (Test-Path $regPath) {
-    Set-ItemProperty -Path $regPath -Name "System.IsPinnedToNameSpaceTree" -Value 0 -Type DWord
-}
-
-# 4. Felhasznaloi mappak takaritasa (Opcionalis, csak ha ures)
-Write-Host "[*] Maradekok takaritasa..." -ForegroundColor Yellow
-$oneDriveFolder = "$env:UserPrincipalName\OneDrive"
-if (Test-Path $oneDriveFolder) {
-    # Itt nem torlunk fajlokat a biztonsag kedveert, csak jelzes
-    Write-Host "  [INFÓ] A helyi OneDrive mappa megmaradt: $oneDriveFolder" -ForegroundColor Gray
+    Set-ItemProperty -Path $regPath -Name "System.IsPinnedToNameSpaceTree" -Value 0 -Type DWord -Force
+    Write-Host "  [OK] OneDrive ikon elrejtve az Intezo fajarol." -ForegroundColor Green
 }
 
 Write-Host "--- KESZ ---" -ForegroundColor Green
 
 # --- Sleep State visszaallitasa ---
-[uint32]$reset = 2147483648
-$type::SetThreadExecutionState($reset) | Out-Null
+if ($type) {
+    $type::SetThreadExecutionState([uint32]2147483648) | Out-Null
+}
