@@ -1,0 +1,46 @@
+{
+  "_comment": "RTS Framework - KB Enabled/Disabled List",
+  "_version": "1.0",
+  "_author": "LordAthis",
+  "_last_updated": "2025-04",
+  "_note": "required=kötelező biztonsági frissítés | harmful=eltávolítandó | recommended=ajánlott | optional=opcionális",
+
+  "Windows_XP": {
+    "_build": "5.1",
+    "_support_ended": "2014-04-08",
+    "_ps_available": "optional_install",
+    "_ps_versions": {
+      "minimum": "1.0",
+      "recommended": "2.0",
+      "best": "2.0",
+      "note": "PS 3.0+ nem támogatott XP-n. PS 2.0 ajánlott, de NE telepítsd ha az erőforrás korlátozott (512MB RAM alatt)!"
+    },
+    "_script_type": "bat_primary",
+    "required": [
+      {
+        "kb": "KB835732",
+        "desc": "MS04-011 - LSASS biztonsági patch (Sasser féreg ellen)",
+        "critical": true
+      },
+      {
+        "kb": "KB890830",
+        "desc": "Malicious Software Removal Tool",
+        "critical": false
+      },
+      {
+        "kb": "KB2347290",
+        "desc": "SHA-2 Code Signing support (nélküle sok szoftver nem fut)",
+        "critical": true
+      }
+    ],
+    "harmful": [
+      {
+        "kb": "KB898461",
+        "desc": "Windows Genuine Advantage Notification - nag screen telepítő",
+        "reason": "Nem biztonsági frissítés, csak bosszantó figyelmeztetés"
+      }
+    ],
+    "recommended": [],
+    "notes": "XP SP3 ajánlott alapállapot. Windows Update szerver offline. WSUS Offline Update eszközzel lehet frissíteni."
+  }
+}
