@@ -50,8 +50,10 @@ function Show-Menu {
     Write-Host " 17  Letiltja az automatikusan telepulo [Candy Crush] es egyeb szemeteket"
     Write-Host " 18  MEGHAJTO IRASVEDELEM KEZELO - Felold es Zarol"
     Write-Host " 19  OneDrive eltavolitasa a rendszerbol"
-    Write-Host " 20  "
+    Write-Host " 20  Regi Visszaallitasi Pontok torlese (Utolso marad csak!)"
     Write-Host " 21  "
+    Write-Host " 22  "
+    Write-Host " 23  "
     Write-Host " 12  Log-takaritas - 30 napnal regebbi logok torlese"
     Write-Host " 13  Napi tobb 'Visszaallitasi pont' engedelyezese"
     Write-Host " 14  Visszaallitasi pont letrehozasa"
@@ -177,7 +179,7 @@ do {
         "17" { Run-Script "Disable-ConsumerFeatures.ps1" }
         "18" { Run-Script "RemoveDiskProtect.ps1" }
         "19" { Run-Script "Disable-OneDrive.ps1" }
-        "20" { Run-Script "" }
+        "20" { Run-Script "Keep-LastRestorePoint.ps1" }
         "21" { Run-Script "" }
         "22" { Run-Script "" }
         "23" { Run-Script "" }
