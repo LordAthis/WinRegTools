@@ -110,7 +110,7 @@ do {
         $rpText = "FELOLDVA (0)"
         $rpColor = "Green"
     }
-    Write-Host "  RP Idokorlat    : " -NoNewline; Write-Host $rpText -ForegroundColor $rpColor
+    Write-Host "  RPC Idokorlat    : " -NoNewline; Write-Host $rpText -ForegroundColor $rpColor
 
     # 3. KB Log dátum
     $lastKB = Get-ChildItem -Path $LogFolder -Filter "*KB_Checker.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
@@ -120,11 +120,11 @@ do {
 
 
     Show-Menu # Ez írja ki a listát
-    $choice = Read-Host "Valassz opciot (0-10 / X)"
+    $choice = Read-Host "Valassz opciot (0-24 / X)"
 
     switch ($choice.ToUpper()) {
         "0" {
-            Write-SessionLog "Az osszes futtatasa indul (1,2,3,)"
+            Write-SessionLog "Az osszes futtatasa indul (1,2,3,4,5,6,7,8,9,10,11,12,13,15,20,)"
             Run-Script "LongPaths_On_Off.ps1"
             Run-Script "SwapDeleteToShutdown.ps1"
             Run-Script "RPCHelper_Fix.ps1"
