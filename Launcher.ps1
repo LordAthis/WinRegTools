@@ -31,33 +31,47 @@ function Show-Menu {
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host "   WinRegTools - LordAthis             " -ForegroundColor Cyan
     Write-Host "========================================" -ForegroundColor Cyan
-    Write-Host " 0  Mind - Az osszes pont sorban" -ForegroundColor Yellow
-    Write-Host " A  AJANLOTT [Nepszeru] beallitasok inditasa"-ForegroundColor Green
-    Write-Host " 1  Hosszu nevek [LongPaths]"
-    Write-Host " 2  Lapozofajl urites [SwapDelete]"
-    Write-Host " 3  RPC Hiba javitasa"
-    Write-Host " 3A  RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve" -ForegroundColor Magenta
-    Write-Host " 4  A Windows Update Cache torlese [Felesleges az 5-os mellett]" -ForegroundColor Magenta
-    Write-Host " 5  WinSxS takaritas es Rendszerjavitas"
-    Write-Host " 6  Edge Letiltasa es Torlese"    
-    Write-Host " 7  Bing Keresesek Letiltasa"
-    Write-Host " 8  Indexeles Letiltasa"
-    Write-Host " 9  Bing Start Menubol kitiltasa"
-    Write-Host " 10  Telemetria Letiltasa"
-    Write-Host " 11  KB Checker - Frissitesek elemzese"
-    Write-Host " 12  KB Checker - Aktualizalasa"
-    Write-Host " 13  Log-takaritas - 30 napnal regebbi logok torlese"
-    Write-Host " 14  Napi tobb 'Visszaallitasi pont' engedelyezese"
-    Write-Host " 15  Visszaallitasi pont letrehozasa"
-    Write-Host " 16  A talcarol eltunteti az idojarast/hireket"
-    Write-Host " 17  Gyorsitja az Intezot: fajlkiterjesztesek mutatasa, 'Ez a gep' az alapertelmezett a Gyorseleres helyett"
-    Write-Host " 18  Letiltja az automatikusan telepulo [Candy Crush] es egyeb szemeteket"
-    Write-Host " 19  MEGHAJTO IRASVEDELEM KEZELO - Felold es Zarol"
-    Write-Host " 20  OneDrive eltavolitasa a rendszerbol"
-    Write-Host " 21  Regi Visszaallitasi Pontok torlese (Utolso marad csak!)"
+    Write-Host " A  AJANLOTT [Nepszeru, majdnem minden] beallitasok inditasa" -ForegroundColor Green
+    Write-Host " K  Az 'A'-bol kimaradt, nekem fontos, szerintem jo"  -ForegroundColor Green
+    Write-Host "----------------------------------------"
+    Write-Host "  Vagy valaszhato kulon-kulon egyesevel a lenti listabolbol, de ebben az esetben is ajanlott" -ForegroundColor Yellow
+    Write-Host "  elotte es utana is visszaallitasi pontot letrehozni [2]," -ForegroundColor Yellow
+    Write-Host "  ehhez pedig bekapcsolni a napi tobb visszaallitasi pont engedelyezeset [1]!" -ForegroundColor Yellow
+    Write-Host "----------------------------------------"
+    Write-Host " ELOKESZITES " -ForegroundColor Yellow
+    Write-Host " 0   Regi Visszaallitasi pontok torlese (csak az utolso marad)"
+    Write-Host " 1   Napi tobb Visszaallitasi pont engedelyezese"
+    Write-Host " 2   Visszaallitasi pont letrehozasa"
+    Write-Host " RENDSZER ES TELJESITMENY OPTIMALIZALAS " -ForegroundColor Yellow
+    Write-Host " 3   Hosszu nevek [LongPaths]"
+    Write-Host " 4   Gyorsitja az Intezot: fajlkiterjesztesek mutatasa, 'Ez a gep' az alapertelmezett a Gyorseleres helyett"
+    Write-Host " 5   Edge Letiltasa es Torlese"    
+    Write-Host " 6   Bing Keresesek Letiltasa"
+    Write-Host " 7   Bing Start Menubol kitiltasa"
+    Write-Host " 8   OneDrive eltavolitasa a rendszerbol"
+    Write-Host " 9   Letiltja az automatikusan telepulo alkalmazasok [Candy Crush] es egyeb szemeteket"
+    Write-Host " 10  A talcarol eltunteti az idojarast/hireket (Widgets kikapcsolása)"
+    Write-Host " 11  Telemetria Letiltasa"
+    Write-Host " TAKARITAS ES KARBANTARTAS  " -ForegroundColor Yellow
+    Write-Host " 12  TEMP konyvtarak egysegesitese (C:\Temp) - a szemet felhalmozodasanak megelozese"  
+    Write-Host " 13  A Windows Update Cache torlese"
+    Write-Host " 14  WinSxS takaritas es Rendszerjavitas"
+    Write-Host " 15  Log-takaritas - 30 napnal regebbi logok torlese"
+    Write-Host " SPECIALIS JAVITASOK   " -ForegroundColor Yellow
+    Write-Host " 16  RPC Hiba javitasa"
+    Write-Host " 16A RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve" -ForegroundColor Magenta
+    Write-Host " 17  Lapozofajl urites leallitaskor [SwapDelete]"
+    Write-Host " 18  Indexeles Letiltasa"
+    Write-Host " 19  KB Checker - Frissitesek elemzese"
+    Write-Host " 20  KB Checker - Aktualizalasa"
+    Write-Host "A MUVELETEK BEFEJEZESEKOR ISMET ERDEMES VISSZAALLITASI PONTOT LETREHOZNI!!! [2]" -ForegroundColor Yellow
+    Write-Host " 21  "
     Write-Host " 22  "
     Write-Host " 23  "
     Write-Host " 24  "
+    Write-Host " CSAK SPECIALIS ESETBEN SZUKSEGES!!!" -ForegroundColor Yellow
+    Write-Host " Y  MEGHAJTO IRASVEDELEM KEZELO - Felold es Zarol"
+    Write-Host " VEGE" -ForegroundColor Yellow
     Write-Host " X  Kilepes" -ForegroundColor Red
     Write-Host "----------------------------------------"
 }
@@ -120,73 +134,70 @@ do {
 
 
     Show-Menu # Ez írja ki a listát
-    $choice = Read-Host "Valassz opciot (0-24 / X)"
+    $choice = Read-Host "Valassz opciot (0-24 / A,X)"
 
     switch ($choice.ToUpper()) {
-        "0" {
-            Write-SessionLog "Az osszes futtatasa indul (1,2,3,4,5,6,7,8,9,10,11,12,13,15,20,)"
-            Run-Script "LongPaths_On_Off.ps1"
-            Run-Script "SwapDeleteToShutdown.ps1"
-            Run-Script "RPCHelper_Fix.ps1"
-            Run-Script "DisableAndClean-Edge.ps1"
-            Run-Script "RestorePoint_24HourLimitRelease.ps1"
-            Run-Script "Clean-UpdateCache.ps1"
-            Run-Script "Clean-WinSxS.ps1"
-            Run-Script "Disable-BingSearch.ps1"
-            Run-Script "Disable-Indexing.ps1"
-            Run-Script "Disable-StartMenuBing.ps1"
-            Run-Script "Disable-Telemetry.ps1"
-            Run-Script "KB_Checker.ps1"
-            Run-Script "KB_Aktualizer.ps1"
-            Run-Script "Clean-Logs.ps1"
-            Run-Script "Create-RestorePoint.ps1"
-            Run-Script "Disable-OneDrive.ps1"
-        }
         "A" {
-            Write-SessionLog "AJANLOTT (Nepszeru) beallitasok inditasa"
+            Write-SessionLog "AJANLOTT beallitasok inditasa"
             # 1. Előkészítés
+            Run-Script "Keep-LastRestorePoint.ps1"
             Run-Script "RestorePoint_24HourLimitRelease.ps1"
-            # 2. Optimalizálás
+            Run-Script "Create-RestorePoint.ps1"
+            # 2. Rendszer Teljesítmény és Optimalizálás
             Run-Script "LongPaths_On_Off.ps1"
+            Run-Script "Optimize-Explorer.ps1"
             Run-Script "DisableAndClean-Edge.ps1"
             Run-Script "Disable-BingSearch.ps1"
-            Run-Script "Disable-Telemetry.ps1"
-            Run-Script "Optimize-Explorer.ps1"
+            Run-Script "Disable-StartMenuBing.ps1"
+            Run-Script "Disable-OneDrive.ps1"
             Run-Script "Disable-ConsumerFeatures.ps1"
-            # 3. Tisztítás
+            Run-Script "Disable-Widgets-News.ps1"
+            Run-Script "Disable-Telemetry.ps1"
+            # 3. Tisztítás és Karbantartás
+            Run-Script "TempOptimizer.ps1"
             Run-Script "Clean-UpdateCache.ps1"
             Run-Script "Clean-WinSxS.ps1"
-            Run-Script "Disable-OneDrive.ps1"
-            # 4. Biztonság
+            Run-Script "Clean-Logs.ps1"
+            # 4. Speciális Javítások
+            Run-Script "RPCHelper_Fix.ps1"
+            Run-Script "SwapDeleteToShutdown.ps1"
+            # 5. Biztonság
             Run-Script "Create-RestorePoint.ps1"
             Write-Host "`n[KESZ] Az ajanlott beallitasok lefutottak!" -ForegroundColor Green
             Start-Sleep -Seconds 5
         }
-        "1"  { Run-Script "LongPaths_On_Off.ps1" }
-        "2"  { Run-Script "SwapDeleteToShutdown.ps1" }
-        "3"  { Run-Script "RPCHelper_Fix.ps1" }
-        "3A"  { Run-Script "RPCHelper_Drastic_Fix.ps1" }
-        "4"  { Run-Script "Clean-UpdateCache.ps1" }
-        "5"  { Run-Script "Clean-WinSxS.ps1" }
-        "6"  { Run-Script "DisableAndClean-Edge.ps1" }
-        "7"  { Run-Script "Disable-BingSearch.ps1" }
-        "8"  { Run-Script "Disable-Indexing.ps1" }
-        "9"  { Run-Script "Disable-StartMenuBing.ps1" }
-        "10"  { Run-Script "Disable-Telemetry.ps1" }
-        "11"  { Run-Script "KB_Checker.ps1" }
-        "12"  { Run-Script "KB_Aktualizer.ps1" }
-        "13" { Run-Script "Clean-Logs.ps1" }
-        "14" { Run-Script "RestorePoint_24HourLimitRelease.ps1" }
-        "15" { Run-Script "Create-RestorePoint.ps1" }
-        "16" { Run-Script "Disable-Widgets-News.ps1" }
-        "17" { Run-Script "Optimize-Explorer.ps1" }
-        "18" { Run-Script "Disable-ConsumerFeatures.ps1" }
-        "19" { Run-Script "RemoveDiskProtect.ps1" }
-        "20" { Run-Script "Disable-OneDrive.ps1" }
-        "21" { Run-Script "Keep-LastRestorePoint.ps1" }
+        "K" {
+            Write-SessionLog "KIMARADT (Szerintem jo) beallitasok inditasa"
+            Run-Script "Disable-Indexing.ps1"
+            Run-Script "KB_Checker.ps1"
+            Run-Script "KB_Aktualizer.ps1"
+        }
+        "0"  { Run-Script "Keep-LastRestorePoint.ps1" }
+        "1" { Run-Script "RestorePoint_24HourLimitRelease.ps1" }
+        "2" { Run-Script "Create-RestorePoint.ps1" }
+        "3"  { Run-Script "LongPaths_On_Off.ps1" }
+        "4" { Run-Script "Optimize-Explorer.ps1" }
+        "5"  { Run-Script "DisableAndClean-Edge.ps1" }
+        "6"  { Run-Script "Disable-BingSearch.ps1" }
+        "7"  { Run-Script "Disable-StartMenuBing.ps1" }
+        "8" { Run-Script "Disable-OneDrive.ps1" }
+        "9" { Run-Script "Disable-ConsumerFeatures.ps1" }
+        "10" { Run-Script "Disable-Widgets-News.ps1" }
+        "11"  { Run-Script "Disable-Telemetry.ps1" }
+        "12"  { Run-Script "TempOptimizer.ps1" }
+        "13"  { Run-Script "Clean-UpdateCache.ps1" }
+        "14"  { Run-Script "Clean-WinSxS.ps1" }
+        "15" { Run-Script "Clean-Logs.ps1" }
+        "16"  { Run-Script "RPCHelper_Fix.ps1" }
+        "16A"  { Run-Script "RPCHelper_Drastic_Fix.ps1" }
+        "17"  { Run-Script "SwapDeleteToShutdown.ps1" }
+        "18"  { Run-Script "Disable-Indexing.ps1" }
+        "19"  { Run-Script "KB_Checker.ps1" }
+        "20"  { Run-Script "KB_Aktualizer.ps1" }
         "22" { Run-Script "" }
         "23" { Run-Script "" }
         "24" { Run-Script "" }
+        "Y" { Run-Script "RemoveDiskProtect.ps1" }
         "X"  {
             Write-SessionLog "Kilepes"
             Write-Host "Viszlat!" -ForegroundColor Cyan
