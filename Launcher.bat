@@ -5,14 +5,14 @@ title RTS Framework - Launcher
 
 :: ============================================================
 :: RTS Framework - Universal Launcher
-:: Verziő: 1.0
+:: Verzio: 1.0
 ::
-:: Feladat: OS detektálás, PS ellenőrzés/ajánlás/telepítés,
-::          majd meghívja a megfelelő PS1 vagy BAT szkriptet
+:: Feladat: OS detektalas, PS ellenorzes/ajanlas/telepites,
+::          majd meghivja a megfelelo PS1 vagy BAT szkriptet
 ::          admin joggal + ExecutionPolicy Bypass
 :: ============================================================
 
-:: ─── Admin jogosultság ellenőrzés ────────────────────────────────────────────
+:: ─── Admin jogosultsag ellenorzes ────────────────────────────────────────────
 net session >nul 2>&1
 if %errorlevel% neq 0 (
     echo.
@@ -23,9 +23,9 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: ─── Ha már admin, és PS1 fájlnevet kapott argumentumként ────────────────────
-:: Használat: RTS_Launcher.bat script.ps1
-:: Ebben az esetben csak indítja a megadott PS1-et
+:: ─── Ha mar admin, es PS1 fajlnevet kapott argumentumkent ────────────────────
+:: Hasznalat: RTS_Launcher.bat script.ps1
+:: Ebben az esetben csak inditja a megadott PS1-et
 
 if not "%~1"=="" (
     if /i "%~x1"==".ps1" (
@@ -38,7 +38,7 @@ if not "%~1"=="" (
     )
 )
 
-:: ─── Interaktív menü ──────────────────────────────────────────────────────────
+:: ─── Interaktiv menu ──────────────────────────────────────────────────────────
 cls
 echo.
 echo  ╔══════════════════════════════════════════════════╗
@@ -46,7 +46,7 @@ echo  ║       RTS Framework - Universal Launcher        ║
 echo  ╚══════════════════════════════════════════════════╝
 echo.
 
-:: ─── OS verzió detektálás ────────────────────────────────────────────────────
+:: ─── OS verzio detektalas ────────────────────────────────────────────────────
 call :DETECT_OS
 
 echo  Rendszer : !OS_NAME!
