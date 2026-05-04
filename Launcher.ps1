@@ -33,47 +33,55 @@ function Show-Menu {
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host " A  AJANLOTT [Nepszeru, majdnem minden] beallitasok inditasa" -ForegroundColor Green
     Write-Host " K  Az 'A'-bol kimaradt, nekem fontos, szerintem jo"  -ForegroundColor Green
-    Write-Host "----------------------------------------"
+    Write-Host " B  Az 'A', és a 'K' egyben"  -ForegroundColor Green
+    Write-Host "----------------------------------------" -ForegroundColor DarkGray
     Write-Host "  Vagy valaszhato kulon-kulon egyesevel a lenti listabolbol, de ebben az esetben is ajanlott" -ForegroundColor Yellow
     Write-Host "  elotte es utana is visszaallitasi pontot letrehozni [2]," -ForegroundColor Yellow
     Write-Host "  ehhez pedig bekapcsolni a napi tobb visszaallitasi pont engedelyezeset [1]!" -ForegroundColor Yellow
-    Write-Host "----------------------------------------"
-    Write-Host " ELOKESZITES " -ForegroundColor Yellow
+    Write-Host "----------------------------------------" -ForegroundColor DarkGray
+    Write-Host "`n ELOKESZITES " -ForegroundColor Yellow
     Write-Host " 0   Regi Visszaallitasi pontok torlese (csak az utolso marad)"
     Write-Host " 1   Napi tobb Visszaallitasi pont engedelyezese"
     Write-Host " 2   Visszaallitasi pont letrehozasa"
-    Write-Host " RENDSZER ES TELJESITMENY OPTIMALIZALAS " -ForegroundColor Yellow
-    Write-Host " 3   Hosszu nevek [LongPaths]"
-    Write-Host " 4   Gyorsitja az Intezot: fajlkiterjesztesek mutatasa, 'Ez a gep' az alapertelmezett a Gyorseleres helyett"
+    
+    Write-Host "`n RENDSZER ES TELJESITMENY OPTIMALIZALAS " -ForegroundColor Yellow
+    Write-Host " 3   Hosszu nevek engedelyezese [LongPaths]"
+    Write-Host " 4   Gyorsitja az Intezot: fajlkiterjesztes, 'Ez a gep' alapertelmezett a Gyorseleres helyett"
     Write-Host " 5   Edge Letiltasa es Torlese"    
     Write-Host " 6   Bing Keresesek Letiltasa"
     Write-Host " 7   Bing Start Menubol kitiltasa"
     Write-Host " 8   OneDrive eltavolitasa a rendszerbol"
-    Write-Host " 9   Letiltja az automatikusan telepulo alkalmazasok [Candy Crush] es egyeb szemeteket"
-    Write-Host " 10  A talcarol eltunteti az idojarast/hireket (Widgets kikapcsolása)"
+    Write-Host " 9   Letiltja az automatikusan telepulo alkalmazasok [Candy Crush, Stb]"
+    Write-Host " 10  A talcarol eltunteti az idojarast/hireket (Widgets)"
     Write-Host " 11  Telemetria Letiltasa"
-    Write-Host " TAKARITAS ES KARBANTARTAS  " -ForegroundColor Yellow
+    
+    Write-Host "`n TAKARITAS ES KARBANTARTAS  " -ForegroundColor Yellow
     Write-Host " 12  TEMP konyvtarak egysegesitese (C:\Temp) - a szemet felhalmozodasanak megelozese"  
     Write-Host " 13  A Windows Update Cache torlese"
     Write-Host " 14  WinSxS takaritas es Rendszerjavitas"
     Write-Host " 15  Log-takaritas - 30 napnal regebbi logok torlese"
-    Write-Host " SPECIALIS JAVITASOK   " -ForegroundColor Yellow
+    
+    Write-Host "`n SPECIALIS JAVITASOK   " -ForegroundColor Yellow
     Write-Host " 16  RPC Hiba javitasa"
-    Write-Host " 16A RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel kiegeszitve" -ForegroundColor Magenta
+    Write-Host " 16A RPC Hiba Drasztikus javitasa, hibas Driver szolgaltatasok torlesevel" -ForegroundColor Magenta
     Write-Host " 17  Lapozofajl urites leallitaskor [SwapDelete]"
     Write-Host " 18  Indexeles Letiltasa"
     Write-Host " 19  KB Checker - Frissitesek elemzese"
     Write-Host " 20  KB Checker - Aktualizalasa"
-    Write-Host "A MUVELETEK BEFEJEZESEKOR ISMET ERDEMES VISSZAALLITASI PONTOT LETREHOZNI!!! [2]" -ForegroundColor Yellow
+
+    Write-Host "`n A MUVELETEK BEFEJEZESEKOR ISMET ERDEMES VISSZAALLITASI PONTOT LETREHOZNI!!! [2]" -ForegroundColor Yellow
+    
+    Write-Host "`n KESOBBI MENUPONTOK ELOKESZITETT HELYE" -ForegroundColor Yellow
     Write-Host " 21  "
     Write-Host " 22  "
     Write-Host " 23  "
     Write-Host " 24  "
-    Write-Host " CSAK SPECIALIS ESETBEN SZUKSEGES!!!" -ForegroundColor Yellow
+    
+    Write-Host "`n CSAK SPECIALIS ESETBEN SZUKSEGES!!!" -ForegroundColor Yellow
     Write-Host " Y  MEGHAJTO IRASVEDELEM KEZELO - Felold es Zarol"
-    Write-Host " VEGE" -ForegroundColor Yellow
+
     Write-Host " X  Kilepes" -ForegroundColor Red
-    Write-Host "----------------------------------------"
+    Write-Host "----------------------------------------" -ForegroundColor DarkGray
 }
 
 # ─── Script hívó ──────────────────────────────────────────────────────────────
