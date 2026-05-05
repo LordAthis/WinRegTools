@@ -1,21 +1,629 @@
-## Felsorolás és 
-
-
-# Vezérlőpult
-Name: Vezelopult
-
-# Eszközkezelő
-Name: Eszkozlezelo
-devmgmt.msc
-
-# Szolgáltatások
-Name: Szolgaltatok
-
-# 
-
-
-#
-
-
-#
+{
+  "sys_list_metadata": {
+    "version": "1.2",
+    "systems": ["XP", "W7", "W8", "W81", "W10", "W11"]
+  },
+  "tools": [
+    {
+      "id": "control_panel",
+      "display_name": "Klasszikus Vezerlopult",
+      "command": "control",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native_hidden"},
+        "W11": {"status": "redirected", "fix": "Hasznald a 'shell:ControlPanelFolder' parancsot a kikeruleshez"}
+      }
+    },
+    
+    {
+      "id": "control_panel_classic",
+      "display_name": "Klasszikus Vezerlopult",
+      "command": "control",
+      "alternative_command": "shell:ControlPanelFolder",
+      "availability": {
+        "XP":  {"status": "native", "note": ""},
+        "W7":  {"status": "native", "note": ""},
+        "W8":  {"status": "native", "note": ""},
+        "W81": {"status": "native", "note": ""},
+        "W10": {"status": "native", "note": "Hatterbe szoritva"},
+        "W11": {"status": "hidden_redirection", "note": "Gyakran atiranyit a Settings-be"}
+      }
+    },
+    }
+    {
+      "id": "god_mode",
+      "display_name": "God Mode (Osszes beallitas)",
+      "command": "shell:::{ED7BA470-8E54-465E-825C-99712043E01C}",
+      "availability": {
+        "XP": {"status": "unsupported"},
+        "W7": {"status": "hidden"},
+        "W8": {"status": "hidden"},
+        "W81": {"status": "hidden"},
+        "W10": {"status": "hidden"},
+        "W11": {"status": "hidden"}
+      }
+    },
+    {
+      "id": "ncpa_cpl",
+      "display_name": "Halozati kapcsolatok (Adapterek)",
+      "command": "ncpa.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "hidden", "note": "Melyen eldugva a menukben"},
+        "W11": {"status": "hidden", "note": "Settings melyen van, kozvetlen link nincs a modern UI-ban"}
+      }
+    },
+    {
+      "id": "gpedit_msc",
+      "display_name": "Csoporthazirend",
+      "command": "gpedit.msc",
+      "availability": {
+        "XP": {"status": "pro_only"},
+        "W7": {"status": "pro_only"},
+        "W8": {"status": "pro_only"},
+        "W81": {"status": "pro_only"},
+        "W10": {"status": "restricted", "fix": "DISM csomaggal engedelyezheto Home alatt"},
+        "W11": {"status": "restricted", "fix": "Batch script szukseges az aktivalashoz"}
+      }
+    },
+    {
+      "id": "lusrmgr_msc",
+      "display_name": "Helyi felhasznalok",
+      "command": "lusrmgr.msc",
+      "availability": {
+        "XP": {"status": "pro_only"},
+        "W7": {"status": "pro_only"},
+        "W8": {"status": "pro_only"},
+        "W81": {"status": "pro_only"},
+        "W10": {"status": "restricted"},
+        "W11": {"status": "restricted", "fix": "Hasznalj 'net user' parancsot vagy lusrmgr.exe-t"}
+      }
+    },
+    {
+      "id": "netplwiz",
+      "display_name": "Specialis felhasznaloi fiokok",
+      "command": "netplwiz",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "limited", "fix": "Auto-loginhoz Regedit: DevicePasswordLessBuildVersion = 0"},
+        "W11": {"status": "limited", "fix": "Ugyanaz a Regedit fix szukseges"}
+      }
+    },
+    {
+      "id": "mmsys_cpl",
+      "display_name": "Klasszikus Hang",
+      "command": "mmsys.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native_hidden"},
+        "W11": {"status": "hidden"}
+      }
+    },
+    {
+      "id": "diskmgmt_msc",
+      "display_name": "Lemezkezeles",
+      "command": "diskmgmt.msc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "deprecated_ui", "note": "Settings > Storage valtja le"}
+      }
+    },
+    {
+      "id": "appwiz_cpl",
+      "display_name": "Programok telepitese",
+      "command": "appwiz.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native_hidden"},
+        "W11": {"status": "redirected"}
+      }
+    },
+    {
+      "id": "sysdm_cpl",
+      "display_name": "Rendszer tulajdonságai",
+      "command": "sysdm.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "hidden", "note": "A modern 'About' oldalra ugrik az ikonja"}
+      }
+    },
+    {
+      "id": "msconfig",
+      "display_name": "Rendszerkonfiguracio",
+      "command": "msconfig",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "partial"},
+        "W81": {"status": "partial"},
+        "W10": {"status": "partial"},
+        "W11": {"status": "partial", "note": "Startup ful a Task Managerben"}
+      }
+    },
+    {
+      "id": "services_msc",
+      "display_name": "Szolgaltatasok",
+      "command": "services.msc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "regedit",
+      "display_name": "Registry Szerkeszto",
+      "command": "regedit",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "taskschd_msc",
+      "display_name": "Feladatutemezo",
+      "command": "taskschd.msc",
+      "availability": {
+        "XP": {"status": "native_old"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "secpol_msc",
+      "display_name": "Helyi biztonsagi hazirend",
+      "command": "secpol.msc",
+      "availability": {
+        "XP": {"status": "pro_only"},
+        "W7": {"status": "pro_only"},
+        "W10": {"status": "pro_only"},
+        "W11": {"status": "pro_only"}
+      }
+    },
+    {
+      "id": "cleanmgr",
+      "display_name": "Lemezkarbantarto",
+      "command": "cleanmgr",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "deprecated"},
+        "W11": {"status": "hidden", "note": "Storage Sense valtja le"}
+      }
+    },
+    {
+      "id": "optionalfeatures",
+      "display_name": "Windows szolgaltatasok",
+      "command": "optionalfeatures",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "resmon",
+      "display_name": "Eroforrás-figyelo",
+      "command": "resmon",
+      "availability": {
+        "XP": {"status": "unsupported"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "perfmon_msc",
+      "display_name": "Teljesitmenyfigyelo",
+      "command": "perfmon.msc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W8": {"status": "native"},
+        "W81": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "msinfo32",
+      "display_name": "Rendszerinformacio",
+      "command": "msinfo32",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "dxdiag",
+      "display_name": "DirectX Diagnosztika",
+      "command": "dxdiag",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "compmgmt_msc",
+      "display_name": "Szamitogep-kezeles",
+      "command": "compmgmt.msc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "fsmgmt_msc",
+      "display_name": "Megosztott mappak",
+      "command": "fsmgmt.msc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "devmgmt_msc",
+      "display_name": "Eszkozkezelo",
+      "command": "devmgmt.msc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "certmgr_msc",
+      "display_name": "Tanusitvanykezelo",
+      "command": "certmgr.msc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "eventvwr_msc",
+      "display_name": "Esemenynaplo",
+      "command": "eventvwr.msc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "colorcpl",
+      "display_name": "Szinkezeles",
+      "command": "colorcpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "powercfg_cpl",
+      "display_name": "Energiagazdalkodas",
+      "command": "powercfg.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "hidden"},
+        "W11": {"status": "hidden"}
+      }
+    },
+    {
+      "id": "desk_cpl",
+      "display_name": "Kijelzo beallitasok",
+      "command": "desk.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "redirected"},
+        "W11": {"status": "redirected"}
+      }
+    },
+    {
+      "id": "main_cpl",
+      "display_name": "Eger beallitasok",
+      "command": "main.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "timedate_cpl",
+      "display_name": "Ido es datum",
+      "command": "timedate.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "joy_cpl",
+      "display_name": "Jatekvezerlok",
+      "command": "joy.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "intl_cpl",
+      "display_name": "Regio es nyelv",
+      "command": "intl.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "firewall_cpl",
+      "display_name": "Windows Firewall",
+      "command": "firewall.cpl",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "write_exe",
+      "display_name": "WordPad",
+      "command": "write.exe",
+      "availability": {
+        "XP": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "removed", "fix": "Fajlok visszamasolasa (wordpad.exe, wordpadfilter.dll) a C:\\Program Files\\Windows NT\\Accessories mappaba."}
+      }
+    },
+    {
+      "id": "calc",
+      "display_name": "Szamologep",
+      "command": "calc",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "uwp_replaced"},
+        "W11": {"status": "uwp_replaced", "fix": "Old Calculator for Windows telepito"}
+      }
+    },
+    {
+      "id": "legacy_calculator",
+      "name": "Klasszikus Szamologep",
+      "command": "calc.exe",
+      "status": {
+        "W10_W11": "replaced",
+        "fix": "A UWP app valtotta fel. Regi verzio 'Old Calculator for Windows 11' telepitovel hozhato vissza."
+      }
+    },
+    {
+      "id": "snippingtool",
+      "display_name": "Kepmetszo (Legacy)",
+      "command": "snippingtool",
+      "availability": {
+        "XP": {"status": "unsupported"},
+        "W7": {"status": "native"},
+        "W10": {"status": "deprecated"},
+        "W11": {"status": "uwp_replaced"}
+      }
+    },
+    {
+      "id": "dialer",
+      "display_name": "Telefontarcsazo",
+      "command": "dialer",
+      "availability": {
+        "XP": {"status": "native"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "osk",
+      "display_name": "Kepernyo-billentyuzet",
+      "command": "osk",
+      "availability": {
+        "XP": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "psr",
+      "display_name": "Lepesrogzito",
+      "command": "psr",
+      "availability": {
+        "XP": {"status": "unsupported"},
+        "W7": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "deprecated", "note": "Sippit valtja le"}
+      }
+    },
+    {
+      "id": "winver",
+      "display_name": "Windows verzio",
+      "command": "winver",
+      "availability": {
+        "XP": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "cliconfg",
+      "display_name": "SQL Client Config",
+      "command": "cliconfg",
+      "availability": {
+        "XP": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "odbcad32",
+      "display_name": "ODBC adatforrasok",
+      "command": "odbcad32",
+      "availability": {
+        "XP": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "sigverif",
+      "display_name": "Fajlalairas ellenorzes",
+      "command": "sigverif",
+      "availability": {
+        "XP": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "verifier",
+      "display_name": "Driver Verifier",
+      "command": "verifier",
+      "availability": {
+        "XP": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "mrt",
+      "display_name": "Kartevo-eltavolito",
+      "command": "mrt",
+      "availability": {
+        "XP": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "stikynot",
+      "display_name": "Sticky Notes (Regi)",
+      "command": "stikynot",
+      "availability": {
+        "W7": {"status": "native"},
+        "W10": {"status": "uwp_replaced"},
+        "W11": {"status": "uwp_replaced"}
+      }
+    },
+    {
+      "id": "shell_appsfolder",
+      "display_name": "Osszes Alkalmazas Mappa",
+      "command": "shell:AppsFolder",
+      "availability": {
+        "XP": {"status": "unsupported"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "shell_startup",
+      "display_name": "Inditopult Mappa",
+      "command": "shell:Startup",
+      "availability": {
+        "XP": {"status": "native"},
+        "W10": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "fsquirt",
+      "display_name": "Bluetooth fajlatvitel",
+      "command": "fsquirt",
+      "availability": {
+        "XP": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "iscsicpl",
+      "display_name": "iSCSI kezdemenyezo",
+      "command": "iscsicpl",
+      "availability": {
+        "W7": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    },
+    {
+      "id": "rekeywiz",
+      "display_name": "EFS tanusitvanykezelo",
+      "command": "rekeywiz",
+      "availability": {
+        "W7": {"status": "native"},
+        "W11": {"status": "native"}
+      }
+    }
+        },
+    {
+      "id": "windows_update_classic",
+      "name": "Windows Update (Klasszikus eleres)",
+      "command": "control /name Microsoft.WindowsUpdate",
+      "status": {
+        "W10_W11": "removed",
+        "fix": "Mar csak a Settings erheto el. Kulso tool (WuMgr) szukseges a regi funkcionalitashoz."
+      }
+    }
+  ]
+}
 
