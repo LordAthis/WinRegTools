@@ -202,9 +202,10 @@ do {
         "18"  { Run-Script "Disable-Indexing.ps1" }
         "19"  { Run-Script "KB_Checker.ps1" }
         "20"  { Run-Script "KB_Aktualizer.ps1" }
-        "22" { Run-Script "" }
-        "23" { Run-Script "" }
-        "24" { Run-Script "" }
+        "21" { Write-Host " Ez a menupont meg nincs implementalva." -ForegroundColor DarkGray }
+        "22" { Write-Host " Ez a menupont meg nincs implementalva." -ForegroundColor DarkGray }
+        "23" { Write-Host " Ez a menupont meg nincs implementalva." -ForegroundColor DarkGray }
+        "24" { Write-Host " Ez a menupont meg nincs implementalva." -ForegroundColor DarkGray }
         "Y" { Run-Script "RemoveDiskProtect.ps1" }
         "X"  {
             Write-SessionLog "Kilepes"
