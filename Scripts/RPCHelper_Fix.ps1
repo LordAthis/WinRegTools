@@ -4,7 +4,7 @@ $sig = '[DllImport("kernel32.dll")] public static extern uint SetThreadExecution
 $type = Add-Type -MemberDefinition $sig -Name "Sleep$(Get-Random)" -Namespace "Win32" -PassThru
 # Decimális érték használata (0x80000001 = 2147483649)
 [uint32]$flags = 2147483649
-$type::SetThreadExecutionState($flags)
+$type::SetThreadExecutionState($flags) | Out-Null
 # --- Ébren tartás és Laptop figyelmeztetés ---
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -94,4 +94,4 @@ Write-Host "Kesz." -ForegroundColor Green
 
 # Alváskezelés visszaállítása alaphelyzetbe (0x80000000 = 2147483648)
 [uint32]$reset = 2147483648
-$type::SetThreadExecutionState($reset)
+$type::SetThreadExecutionState($reset) | Out-Null
