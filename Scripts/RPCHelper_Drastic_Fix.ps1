@@ -1,95 +1,132 @@
 # --- Ébren tartás és Laptop figyelmeztetés ---
 # API betöltése (dinamikus névvel, hogy ne legyen ütközés)
-# Futás alatt: Ébren tartás kényszerítése
 $sig = '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint esFlags);'
 $type = Add-Type -MemberDefinition $sig -Name "Sleep$(Get-Random)" -Namespace "Win32" -PassThru
-# Decimális érték használata a konverziós hiba elkerülésére (0x80000001 = 2147483649)
 [uint32]$flags = 2147483649
-$type::SetThreadExecutionState($flags)
+# [Out-Null] hozzáadása, hogy a felesleges visszatérési szám ne íródjon ki a konzolra
+$type::SetThreadExecutionState($flags) | Out-Null
 # --- Ébren tartás és Laptop figyelmeztetés ---
 
-
-# RPCHelper_Fix.ps1 - LordAthis - Ultimate RPC & Service Recovery
+# RPCHelper_Fix.ps1 - LordAthis - Ultimate RPC & Service Recovery (.NET mod)
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 Write-Host "================================================" -ForegroundColor Cyan
-Write-Host "   RPC ÉS RENDSZERSZOLGÁLTATÁS HELYREÁLLÍTÁS" -ForegroundColor Cyan
+Write-Host "   RPC ES RENDSZERSZOLGALTATAS HELYREALLITAS" -ForegroundColor Cyan
 Write-Host "================================================" -ForegroundColor Cyan
 
-# 1. Ismert káros/hibás szolgáltatások eltávolítása (pl. Intel Ipsm)
-Write-Host "[1] Specifikus hibaforrások keresése..." -ForegroundColor Yellow
+# Rendszergazdai jogkör ellenőrzése
+$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isAdmin) {
+    Write-Host "[!] HIBA: A szkriptet RENDSZERGAZDAKENT kell futtatni!" -ForegroundColor Red
+    Exit
+}
+
+# 1. Ismert káros/hibás szolgáltatások és driverek eltávolítása (pl. Intel Ipsm)
+Write-Host "[1] Specifikus hibaforrasok keresese es driver torles..." -ForegroundColor Yellow
 $badServices = @("Ipsm", "Intel(R) Power Sharing Manager")
+
+# Megnyitjuk a Services kulcsot írásra az eltávolításhoz
+$servicesKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Services", $true)
 
 foreach ($badSvc in $badServices) {
     if (Get-Service -Name $badSvc -ErrorAction SilentlyContinue) {
-        Write-Host "  [!] $badSvc találva! Eltávolítás..." -ForegroundColor Red
+        Write-Host "  [!] $badSvc talalva! Eltavolitas..." -ForegroundColor Red
         Stop-Service -Name $badSvc -Force -ErrorAction SilentlyContinue
-        sc.exe delete $badSvc | Out-Null
-        Write-Host "  [OK] $badSvc törölve." -ForegroundColor Green
+        
+        try {
+            # .NET alapú drasztikus törlés a Registry-ből (sc.exe delete helyett)
+            if ($servicesKey.OpenSubKey($badSvc)) {
+                $servicesKey.DeleteSubKeyTree($badSvc, $false)
+                Write-Host "  [OK] $badSvc driver/szolgaltatas sikeresen torolve." -ForegroundColor Green
+            }
+        } catch {
+            Write-Host "  [HIBA] Nem sikerult torolni a(z) $badSvc kulcsot a Registry-bol!" -ForegroundColor Red
+        }
     }
 }
 
-# 2. Kritikus RPC és DCOM szolgáltatások helyreállítása
+# 2. Kritikus RPC és DCOM szolgáltatások helyreállítása .NET-en keresztül
 Write-Host ""
-Write-Host "[2] Alapvető RPC szolgáltatások ellenőrzése..." -ForegroundColor Yellow
+Write-Host "[2] Alapveto RPC szolgaltatasok ellenorzese..." -ForegroundColor Yellow
 $rpcServices = @{
-    "RpcSs"        = "Automatic"
-    "RpcEptMapper" = "Automatic"
-    "DcomLaunch"   = "Automatic"
-    "RpcLocator"   = "Manual"
+    "RpcSs"        = 2;  # Automatic
+    "RpcEptMapper" = 2;  # Automatic
+    "DcomLaunch"   = 2;  # Automatic
+    "RpcLocator"   = 3   # Manual
 }
 
 foreach ($svc in $rpcServices.Keys) {
     try {
-        Set-Service -Name $svc -StartupType $rpcServices[$svc] -ErrorAction SilentlyContinue
-        if ((Get-Service $svc).Status -ne 'Running' -and $svc -ne "RpcLocator") {
+        # Beállítás .NET-en keresztül, ami kikerüli a sima Set-Service tiltását
+        $svcKey = $servicesKey.OpenSubKey($svc, $true)
+        if ($svcKey) {
+            $svcKey.SetValue("Start", $rpcServices[$svc], [Microsoft.Win32.RegistryValueKind]::DWord)
+            $svcKey.Close()
+        }
+
+        # Elindítás, ha szükséges (kivéve az RpcLocator-t)
+        $status = Get-Service -Name $svc -ErrorAction Stop
+        if ($status.Status -ne 'Running' -and $svc -ne "RpcLocator") {
             Start-Service -Name $svc -ErrorAction SilentlyContinue
         }
-        Write-Host "  [OK] $svc beállítva ($($rpcServices[$svc]))." -ForegroundColor Green
+        Write-Host "  [OK] $svc beallitva." -ForegroundColor Green
     } catch {
-        Write-Host "  [!!] $svc nem érhető el!" -ForegroundColor Red
+        Write-Host "  [!!] $svc nem erheto el vagy modosithato!" -ForegroundColor Red
     }
 }
+if ($servicesKey) { $servicesKey.Close() }
 
 # 3. WMI (Windows Management Instrumentation) javítás
-# Sokszor az RPC hiba mögött a WMI tároló sérülése áll
 Write-Host ""
-Write-Host "[3] WMI (RPC alapfeltétel) ellenőrzése..." -ForegroundColor Yellow
-$wmiStatus = Get-Service -Name winmgmt
-if ($wmiStatus.Status -ne 'Running') {
-    Write-Host "  [!] WMI nem fut. Újraindítás..." -ForegroundColor Yellow
-    Restart-Service -Name winmgmt -Force -ErrorAction SilentlyContinue
+Write-Host "[3] WMI (RPC alapfeltetel) ellenorzese..." -ForegroundColor Yellow
+try {
+    $wmiStatus = Get-Service -Name winmgmt -ErrorAction Stop
+    if ($wmiStatus.Status -ne 'Running') {
+        Write-Host "  [!] WMI nem fut. Ujrainditas..." -ForegroundColor Yellow
+        Restart-Service -Name winmgmt -Force -ErrorAction SilentlyContinue
+    }
+    Write-Host "  [OK] WMI szolgaltatas aktiv." -ForegroundColor Green
+} catch {
+    Write-Host "  [HIBA] A WMI szolgaltatas nem erhető el!" -ForegroundColor Red
 }
-Write-Host "  [OK] WMI szolgáltatás aktív." -ForegroundColor Green
 
-# 4. Registry és Hálózati protokoll tisztítás
+# 4. Registry és Hálózati protokoll tisztítás .NET alapokon
 Write-Host ""
-Write-Host "[4] Hálózati réteg és Registry alaphelyzetbe állítása..." -ForegroundColor Yellow
+Write-Host "[4] Halozati reteg es Registry alaphelyzetbe allitasa..." -ForegroundColor Yellow
 
-# RPC Internet korlátozások törlése
-if (Test-Path "HKLM:\SOFTWARE\Microsoft\Rpc\Internet") {
-    Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\Rpc\Internet" -Recurse -Force
-    Write-Host "  [OK] RPC Internet korlátozások törölve." -ForegroundColor Green
+# RPC Internet korlátozások törlése .NET-tel
+$rpcKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Rpc", $true)
+if ($rpcKey) {
+    $subKeys = $rpcKey.GetSubKeyNames()
+    if ($subKeys -contains "Internet") {
+        try {
+            $rpcKey.DeleteSubKeyTree("Internet", $false)
+            Write-Host "  [OK] RPC Internet korlatozasok torolve." -ForegroundColor Green
+        } catch {
+            Write-Host "  [HIBA] Nem sikerult torolni az Internet korlatozasokat!" -ForegroundColor Red
+        }
+    } else {
+        Write-Host "  [OK] Nincsenek tisztitando RPC korlatozasok." -ForegroundColor Green
+    }
+    $rpcKey.Close()
 }
 
 # Hálózati stack reset
 netsh winsock reset | Out-Null
 netsh int ip reset | Out-Null
 ipconfig /flushdns | Out-Null
-Write-Host "  [OK] Winsock, IP és DNS gyorsítótár ürítve." -ForegroundColor Green
+Write-Host "  [OK] Winsock, IP es DNS gyorsitotar uritve." -ForegroundColor Green
 
 # 5. Rendszerfájl ellenőrzés (háttérben indítva)
 Write-Host ""
-Write-Host "[5] Gyors fájlrendszer ellenőrzés indítása (sfc)..." -ForegroundColor Yellow
-sfc /verifyonly | Out-Null # Csak ellenőriz, nem tart sokáig
-Write-Host "  [OK] Ellenőrzés lefutott." -ForegroundColor Green
+Write-Host "[5] Gyors fajlrendszer ellenorzes inditasa (sfc)..." -ForegroundColor Yellow
+sfc /verifyonly | Out-Null
+Write-Host "  [OK] Ellenorzes lefutott." -ForegroundColor Green
 
 Write-Host ""
 Write-Host "================================================" -ForegroundColor Cyan
-Write-Host " A javítások végeztek. ÚJRAINDÍTÁS JAVASOLT!" -ForegroundColor Magenta
+Write-Host " A javitasok vegeztek. UJRAINDITAS JAVASOLT!" -ForegroundColor Magenta
 Write-Host "================================================" -ForegroundColor Cyan
 
-
-
-# Alváskezelés visszaállítása alaphelyzetbe (0x80000000 = 2147483648)
+# Alváskezelés visszaállítása alaphelyzetbe
 [uint32]$reset = 2147483648
-$type::SetThreadExecutionState($reset)
+$type::SetThreadExecutionState($reset) | Out-Null
