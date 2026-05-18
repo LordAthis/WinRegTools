@@ -23,7 +23,8 @@ function Show-DiskMenu {
     Write-Host " 2  Munkamenet lemezeinek VISSZAZARASA" -ForegroundColor Yellow
     Write-Host " 3  Globalis USB irasvedelem KI"
     Write-Host " 4  Globalis USB irasvedelem BE"
-    Write-Host " X  Vissza a fomenube"
+    Write-Host " V  Vissza a fomenube"
+    Write-Host " X  Kilepes" -ForegroundColor Red
     Write-Host "----------------------------------------"
 }
 
@@ -90,8 +91,15 @@ do {
             Write-Host "Globalis vedelem BEKAPCSOLVA." -ForegroundColor Yellow
             Start-Sleep -Seconds 2
         }
+
+        "X"   {
+            Write-SessionLog "Kilepes"
+            Write-Host "Viszlat!" -ForegroundColor Cyan
+            Start-Sleep -Seconds 1
+            break
+        }
     }
-} while ($opt -ne "X" -and $opt -ne "x")
+} while ($opt -notin @("V", "v", "X", "x"))
 
 # --- Alvaskezeles visszaallitasa ---
 if ($type) {
