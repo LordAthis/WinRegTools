@@ -120,14 +120,14 @@ function Run-Script ([string]$FileName) {
 Clear-Host
 
 do {
-    # --- AKTUALIS RENDSZERALLAPOT (Javított) ---
-    Write-Host "--- AKTUALIS RENDSZERALLAPOT ---" -ForegroundColor DarkCyan
+    # - - - - - -   AKTUALIS RENDSZERALLAPOT   - - - - - -
+    Write-Host ""
+    Write-Host "- - - - - -   AKTUALIS RENDSZERALLAPOT   - - - - - -" -ForegroundColor DarkCyan
     
     # 1. RPC Ellenőrzés
     $rpc = Get-Service RpcSs -ErrorAction SilentlyContinue
     $rpcStatusText = if ($rpc) { $rpc.Status } else { "Nem talalható" }
     $rpcColor = if ($rpcStatusText -eq 'Running') { "Green" } else { "Red" }
-    Write-Host "  RPC Szolgaltatas : " -NoNewline; Write-Host $rpcStatusText -ForegroundColor $rpcColor
 
     # 2. RP Limit Ellenőrzés
     $rpFreq = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "SystemRestorePointCreationFrequency" -ErrorAction SilentlyContinue
@@ -139,14 +139,20 @@ do {
         $rpText = "FELOLDVA (0)"
         $rpColor = "Green"
     }
-    Write-Host "  RPC Idokorlat    : " -NoNewline; Write-Host $rpText -ForegroundColor $rpColor
 
     # 3. KB Log dátum
     $lastKB = Get-ChildItem -Path $LogFolder -Filter "*KB_Checker.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     $kbDate = if ($lastKB) { $lastKB.LastWriteTime.ToString("yyyy-MM-dd HH:mm") } else { "Nincs log" }
-    Write-Host "  Utolso KB-check : " -NoNewline; Write-Host $kbDate -ForegroundColor Cyan
-    Write-Host ""
 
+    # 4. Az első három pont kiiratása (1.-2.-3.)
+    Write-Host "  RPC Szolgaltatas: " -NoNewline;
+    Write-Host $rpcStatusText -ForegroundColor $rpcColor -NoNewline;
+
+    Write-Host " - RPC Idokorlat: " -NoNewline;
+    Write-Host $rpText -ForegroundColor $rpColor -NoNewline;
+
+    Write-Host " - Utolso KB-check: " -NoNewline;
+    Write-Host $kbDate -ForegroundColor Cyan
 
     Show-Menu # Ez írja ki a listát
     $choice = Read-Host "Valassz opciot (0-24 / A,X)"
