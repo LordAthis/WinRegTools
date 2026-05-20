@@ -1,16 +1,20 @@
 # WinRegTools - Launcher.ps1
 # Gyökérbe kerül, a scriptek a /Scripts/ mappában vannak.
 
-# 1. .NET környezeti változó átírása a futási házirend megkerülésére (Csak erre a folyamatra)
+# 1. Karakterkódolás kényszerítése az ékezetes mappák (pl. "Mentés") miatt
+[console]::InputEncoding = [System.Text.Encoding]::UTF8
+[console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
+
+# 2. .NET környezeti változó átírása a futási házirend megkerülésére
 [System.Environment]::SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass", [System.EnvironmentVariableTarget]::Process)
 
-# 2. Rendszergazdai jogok ellenőrzése és kényszerítése
+# 3. Rendszergazdai jogok ellenőrzése és kényszerítése UTF-8 támogatással
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    # .NET-es ProcessStartInfo használata a tiszta, hibatűrő indításhoz
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = "powershell.exe"
-    # Átadjuk a Bypass-t a következő ablaknak is, és kezeljük a szóközöket az elérési útban
-    $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    # Az -EncodedCommand helyett -File-t használunk, de explicit UTF-8 kényszerítéssel az argumentumban
+    $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"& { [console]::InputEncoding = [System.Text.Encoding]::UTF8; [console]::OutputEncoding = [System.Text.Encoding]::UTF8; . '$PSCommandPath' }`""
     $psi.Verb = "RunAs"
     
     try {
@@ -22,10 +26,9 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     Exit
 }
 
-# 3. Munkakönyvtár beállítása a szerviz szkriptekhez
+# 4. Munkakönyvtár beállítása a szerviz szkriptekhez
 Set-Location -Path $PSScriptRoot
 $ScriptFolder = Join-Path $PSScriptRoot "Scripts"
-
 # --- Innentől jön a szervizkódod ---
 Write-Host "--- SZERVIZ MÓD AKTÍV (.NET BYPASS) ---" -ForegroundColor Cyan
 
