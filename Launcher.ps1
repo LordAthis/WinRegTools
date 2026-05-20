@@ -2,9 +2,8 @@
 # Gyökérbe kerül, a scriptek a /Scripts/ mappában vannak.
 
 # 1. Karakterkódolás kényszerítése az ékezetes mappák (pl. "Mentés") miatt
-[console]::InputEncoding = [System.Text.Encoding]::UTF8
-[console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
 
 # 2. .NET környezeti változó átírása a futási házirend megkerülésére
 [System.Environment]::SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass", [System.EnvironmentVariableTarget]::Process)
