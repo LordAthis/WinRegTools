@@ -1,16 +1,34 @@
 # WinRegTools - Launcher.ps1
 # Gyökérbe kerül, a scriptek a /Scripts/ mappában vannak.
 
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$OutputEncoding = [System.Text.Encoding]::UTF8
+# 1. .NET környezeti változó átírása a futási házirend megkerülésére (Csak erre a folyamatra)
+[System.Environment]::SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass", [System.EnvironmentVariableTarget]::Process)
 
-# Admin önfuttatás
+# 2. Rendszergazdai jogok ellenőrzése és kényszerítése
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-    exit
+    # .NET-es ProcessStartInfo használata a tiszta, hibatűrő indításhoz
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "powershell.exe"
+    # Átadjuk a Bypass-t a következő ablaknak is, és kezeljük a szóközöket az elérési útban
+    $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    $psi.Verb = "RunAs"
+    
+    try {
+        [System.Diagnostics.Process]::Start($psi)
+    } catch {
+        Write-Warning "A szervizprogram futtatásához rendszergazdai jog szükséges!"
+        Read-Host "Nyomj Enter-t a kilépéshez..."
+    }
+    Exit
 }
 
+# 3. Munkakönyvtár beállítása a szerviz szkriptekhez
+Set-Location -Path $PSScriptRoot
 $ScriptFolder = Join-Path $PSScriptRoot "Scripts"
+
+# --- Innentől jön a szervizkódod ---
+Write-Host "--- SZERVIZ MÓD AKTÍV (.NET BYPASS) ---" -ForegroundColor Cyan
+
 
 # ─── LOG mappa létrehozása (ha még nincs) ─────────────────────────────────────
 $LogFolder = Join-Path $PSScriptRoot "LOG"
