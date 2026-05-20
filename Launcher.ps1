@@ -1,36 +1,16 @@
 # WinRegTools - Launcher.ps1
 # Gyökérbe kerül, a scriptek a /Scripts/ mappában vannak.
 
-# 1. Karakterkódolás kényszerítése az ékezetes mappák (pl. "Mentés") miatt
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-# 2. .NET környezeti változó átírása a futási házirend megkerülésére
-[System.Environment]::SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass", [System.EnvironmentVariableTarget]::Process)
-
-# 3. Rendszergazdai jogok ellenőrzése és kényszerítése UTF-8 támogatással
+# Admin önfuttatás
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    $psi = New-Object System.Diagnostics.ProcessStartInfo
-    $psi.FileName = "powershell.exe"
-    # Az -EncodedCommand helyett -File-t használunk, de explicit UTF-8 kényszerítéssel az argumentumban
-    $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"& { [console]::InputEncoding = [System.Text.Encoding]::UTF8; [console]::OutputEncoding = [System.Text.Encoding]::UTF8; . '$PSCommandPath' }`""
-    $psi.Verb = "RunAs"
-    
-    try {
-        [System.Diagnostics.Process]::Start($psi)
-    } catch {
-        Write-Warning "A szervizprogram futtatásához rendszergazdai jog szükséges!"
-        Read-Host "Nyomj Enter-t a kilépéshez..."
-    }
-    Exit
+    Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
 }
 
-# 4. Munkakönyvtár beállítása a szerviz szkriptekhez
-Set-Location -Path $PSScriptRoot
 $ScriptFolder = Join-Path $PSScriptRoot "Scripts"
-# --- Innentől jön a szervizkódod ---
-Write-Host "--- SZERVIZ MÓD AKTÍV (.NET BYPASS) ---" -ForegroundColor Cyan
-
 
 # ─── LOG mappa létrehozása (ha még nincs) ─────────────────────────────────────
 $LogFolder = Join-Path $PSScriptRoot "LOG"
